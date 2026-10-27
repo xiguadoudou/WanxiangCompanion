@@ -1,0 +1,12 @@
+{
+  "packageName": "com.doudou.wxq",
+  "versionCode": 6,
+  "versionName": "0.1.5",
+  "apkUrl": "https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.5/WanxiangCompanion-0.1.5.apk",
+  "apkFallbackUrls": [
+    "https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.5.apk"
+  ],
+  "sha256": "bf0088908c80a5938d5bb3a7c0c1a3635b203efd11734d9d4e3283e4c4679165",
+  "sizeBytes": 78892,
+  "notes": "更新源迁移到 GitHub，支持软件内检查、下载、校验与系统确认安装。\n新增 HTTPS 下载跳转及 GitHub 备用下载。保留悬浮窗贴边、右下角调节和自适应布局。"
+}
