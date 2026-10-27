@@ -66,7 +66,7 @@
  function newRound(){resetRoundUi();cmd('resetRound');}
  function closeUpdateDialog(){if($('updateDialog').open)$('updateDialog').close();}
  function renderUpdateDialog(e){
-  $('updateCurrentVersion').textContent='当前 '+(e.installedVersion||'0.1.9');$('updateLatestVersion').textContent=e.latestVersion||'';
+  $('updateCurrentVersion').textContent='当前 '+(e.installedVersion||'0.1.10');$('updateLatestVersion').textContent=e.latestVersion||'';
   const notes=String(e.notes||'').trim()||'本版本暂无更新说明。';if($('updateChangelog').textContent!==notes)$('updateChangelog').textContent=notes;
   const active=['checking','downloading'].includes(e.state),error=e.state==='error';
   $('updateDialogStatus').textContent=e.message||'';$('updateDialogStatus').hidden=!['downloading','ready','error','checking'].includes(e.state);$('updateDialogStatus').classList.toggle('error',error);
@@ -83,7 +83,7 @@
  function renderUpdater(event={}){
   const e={...softwareState,...event};if(e.state==='current'){e.available=false;e.downloadReady=false;}softwareState=e;
   const active=['checking','downloading'].includes(e.state);
-  $('installedVersion').textContent='当前 '+(e.installedVersion||'0.1.9');$('softwareStatus').textContent=e.message||'打开应用自动检查软件版本';
+  $('installedVersion').textContent='当前 '+(e.installedVersion||'0.1.10');$('softwareStatus').textContent=e.message||'打开应用自动检查软件版本';
   $('softwareNotes').textContent=e.notes||'';$('softwareNotes').hidden=!e.notes;
   $('softwareProgress').hidden=e.state!=='downloading';$('softwareProgress').value=e.progress||0;
   $('checkSoftware').disabled=active;$('downloadSoftware').hidden=!e.available||e.downloadReady;$('downloadSoftware').disabled=active;
@@ -99,7 +99,7 @@
     case 'init':
      if(booted)return;booted=true;overlay=!!e.overlay;document.body.classList.toggle('overlay',overlay);
      Object.assign(ui,e.prefs||{});catalog=e.catalog||catalog;L.configureCatalog(catalog);ui.bans=L.cleanBans(ui.bans);data=e.data?.rows?e.data:null;
-     renderBans();renderCommander();renderStyle();renderResult();renderUpdater(e.updater);
+     renderBans();renderCommander();renderStyle();renderResult();renderUpdater(e.updater);if(e.imageCacheStatus)$('cacheStatus').textContent=e.imageCacheStatus;
      if(catalog.version)$('version').textContent=catalog.version+' · 上次检查 '+fmtTime(catalog.checkedAt);
      if(data&&data.queryKey===L.queryKey(query()))status('缓存 · '+fmtTime(data.fetchedAt)+' · 正在检查最新数据…','loading');
      if(ui.commanderId)request();break;
@@ -108,6 +108,7 @@
      $('refresh').classList.remove('busy-refresh');
      if(ui.commanderId)request();break;
     case 'roundReset':resetRoundUi(e.prefs);break;
+    case 'cacheStatus':$('cacheStatus').textContent=e.message;break;
     case 'softwareUpdate':renderUpdater(e);break;
     case 'dataStatus':$('dataSyncStatus').textContent=e.message;if(e.state!=='checking')$('refresh').classList.remove('busy-refresh');break;
     case 'queryProgress':if(e.queryKey===L.queryKey(query()))status(e.message+'…','loading');break;

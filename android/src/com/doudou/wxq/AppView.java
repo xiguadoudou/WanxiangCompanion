@@ -34,6 +34,11 @@ final class AppView extends WebView implements Repository.Listener {
             }
         },"Native");
         setWebViewClient(new WebViewClient(){
+            @Override public android.webkit.WebResourceResponse shouldInterceptRequest(WebView v,WebResourceRequest request){
+                String url=request.getUrl().toString();if(!"GET".equals(request.getMethod())||!ImageDiskCache.accepts(url))return null;
+                try{ImageDiskCache.Entry entry=repo.images.get(url);return new android.webkit.WebResourceResponse(entry.mime,null,200,"OK",java.util.Collections.singletonMap("Cache-Control","no-store"),new java.io.ByteArrayInputStream(entry.bytes));}
+                catch(java.io.IOException e){return new android.webkit.WebResourceResponse("text/plain","UTF-8",404,"Image unavailable",java.util.Collections.emptyMap(),new java.io.ByteArrayInputStream(new byte[0]));}
+            }
             @Override public boolean shouldOverrideUrlLoading(WebView v,WebResourceRequest r){return !r.getUrl().toString().equals("file:///android_asset/"+(overlay?"overlay.html":"index.html"));}
             @Override public void onPageFinished(WebView v,String u){if(!disposed){loaded=true;onEvent(repo.state(overlay));}}
             @Override public boolean onRenderProcessGone(WebView v,android.webkit.RenderProcessGoneDetail detail){rendererGone=true;dispose();if(failure!=null)repo.main.post(()->failure.failed(AppView.this));return true;}
