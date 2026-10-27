@@ -1,12 +1,12 @@
 {
   "packageName": "com.doudou.wxq",
-  "versionCode": 6,
-  "versionName": "0.1.5",
-  "apkUrl": "https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.5/WanxiangCompanion-0.1.5.apk",
+  "versionCode": 7,
+  "versionName": "0.1.6",
+  "apkUrl": "https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.6/WanxiangCompanion-0.1.6.apk",
   "apkFallbackUrls": [
-    "https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.5.apk"
+    "https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.6.apk"
   ],
-  "sha256": "bf0088908c80a5938d5bb3a7c0c1a3635b203efd11734d9d4e3283e4c4679165",
+  "sha256": "462f0d25362f76492156a99ffaff5ccb760c6e679088c53199896b2968c5b887",
   "sizeBytes": 78892,
-  "notes": "更新源迁移到 GitHub，支持软件内检查、下载、校验与系统确认安装。\n新增 HTTPS 下载跳转及 GitHub 备用下载。保留悬浮窗贴边、右下角调节和自适应布局。"
+  "notes": "1. 打开软件自动检查 GitHub 新版本，有更新时弹窗展示版本号和更新内容。\n2. 支持立即下载、稍后再说；下载进度与安装入口可在弹窗内完成。\n3. 同次启动不重复提示相同版本，手动检查可重新查看。\n4. 已下载且校验通过的同版本安装包，在再次检查后仍可继续安装。"
 }

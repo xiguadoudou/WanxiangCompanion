@@ -1,8 +1,14 @@
 # 万象弈伴 · GitHub 更新
 
-Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.5**，包名 `com.doudou.wxq`，版本号 6。
+Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.6**，包名 `com.doudou.wxq`，版本号 7。
 
-[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.5.apk)
+[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.6.apk)
+
+## 启动更新弹窗
+
+0.1.6 起打开软件会自动检查 GitHub。有新版本时展示新旧版本号、更新内容和“立即下载”；支持“稍后再说”，同次启动不会反复提示相同版本。下载时显示进度，校验后可以在弹窗中安装。无更新或检查失败时不弹窗。
+
+已是最新版本时不会显示更新弹窗；需要手动查看时使用设置中的更新入口。
 
 ## 在软件内更新
 
