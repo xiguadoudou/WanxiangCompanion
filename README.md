@@ -14,9 +14,9 @@ Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.9**，包
 
 GitHub 完成首次构建后，可访问 **https://xiguadoudou.github.io/WanxiangCompanion/**。
 
-网页每次加载读取本仓库 `updates/latest.json`，显示版本号、更新内容、主下载与备用下载。资料加载失败或禁用 JavaScript 时，下载入口仍指向 Releases 最新版本的固定名 `WanxiangCompanion.apk`。0.1.9 起发布脚本同时上传固定名与版本名 APK，两者内容一致。网页没有账户、无统计脚本，也不保存用户选择。
+网页每次加载优先读取本仓库已发布的最新 Releases，失败时读取 `updates/latest.json`，显示版本号、更新内容、主下载与备用下载。资料加载失败或禁用 JavaScript 时，下载入口仍指向 Releases 最新版本的固定名 `WanxiangCompanion.apk`。0.1.9 起发布脚本同时上传固定名与版本名 APK，两者内容一致。网页没有账户、无统计脚本，也不保存用户选择。
 
-本仓库连接不包含 Pages 管理权限，首次开关需要仓库所有者设置一次。后续不需要重复开关；发布版本资料后，页面读取新版本即可更新，不必逐次修改 HTML。
+本仓库连接不包含 Pages 管理权限，首次开关需要仓库所有者设置一次。后续不需要重复开关；发布新 Releases 后，页面读取新版本即可更新，不必逐次修改 HTML。
 
 ## 小窗口完整资料
 
