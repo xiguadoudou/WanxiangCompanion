@@ -2,6 +2,8 @@
 
 Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.9**，包名 `com.doudou.wxq`，版本号 10。
 
+[查看 Android 源码](android/) · [下载当前源码包](https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.9/WanxiangCompanion-0.1.9-source.zip)
+
 [下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.9.apk)
 
 ## 下载页面（GitHub Pages）
@@ -46,10 +48,17 @@ GitHub 完成首次构建后，可访问 **https://xiguadoudou.github.io/Wanxian
 
 版本资料：[updates/latest.json](updates/latest.json)。统计资料来源仍为 [万象棋大数据](https://www.datawxq.com/)，软件更新与阵容数据检查独立。
 
-## 发布后续版本
+## 源码与发布维护
 
-1. 在私有环境沿用原签名构建更高 versionCode 的 APK。
-2. 将 APK 放入 `updates/`，更新 `updates/latest.json` 中的版本、文件地址、大小、SHA-256 和更新说明，同次提交至 main。
-3. GitHub Actions 校验文件后自动创建并发布对应 Releases。公开版本不会被自动覆盖；同版本重复执行会检查现有附件后跳过。
+Android 源码位于 [android/](android/)，包括 Java 实现、主页面和悬浮窗界面、资源、构建脚本及回归测试。构建方法见 [android/README.md](android/README.md)。后续每次发布 APK，都同步提交对应源码，并在 Releases 提供可直接下载的版本源码 ZIP。
 
-仓库只保存预先签名的 APK、版本资料和发布脚本。签名私钥在私有构建环境保管；发布任务使用 GitHub 自动提供的短期凭据。
+0.1.9 的源码是在已有 Release 上补充的，请使用明确命名的 `WanxiangCompanion-0.1.9-source.zip` 附件；该旧标签自动生成的 “Source code” ZIP 不包含此次新增的 Android 目录。以后在包含源码的提交上创建新版本标签。
+
+1. 修改 `android/` 中的完整实现，更新 Manifest 和 `BuildInfo.java` 的版本号；在私有环境沿用原签名构建 APK。
+2. 将正式 APK 放入 `updates/`，更新 `updates/latest.json` 的版本、地址、大小、SHA-256 和更新说明，与本版源码在同次提交中更新到 main。
+3. GitHub Actions 校验 APK 摘要、源码版本和 APK 的全部 assets，生成只包含公开源码的 ZIP，并一同发布 APK、版本资料与源码附件。缺失或不匹配的源码会阻止发布。
+4. 每版包含 `WanxiangCompanion-<版本>-source.zip`，并附带固定名 `WanxiangCompanion-source.zip`，可通过 Releases 最新版本下载。`SOURCE.json` 记录对应 APK 摘要和源码文件摘要。
+
+已公开的 APK 和源码附件不自动覆盖；同版本重跑逐字节检查现有文件后跳过。0.1.9 首次补充源码时保留原有 APK、版本资料和更新说明，只增加源码附件。
+
+签名私钥、密码、运行缓存、账号凭据不发布。公开构建默认生成自己的调试签名；只有维护者在私有环境提供原签名才能构建可覆盖官方版本的更新包。仓库不保存用户令牌；发布使用 GitHub 自动提供的短期凭据。

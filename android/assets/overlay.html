@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' data:; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'none'">
+<title>万象弈伴 · 对局面板</title>
+<link rel="stylesheet" href="overlay.css">
+</head>
+<body>
+<main class="panel">
+ <div class="filterbar"><button id="commanderTrigger" class="commander-trigger" aria-label="选择棋手" aria-expanded="false"><span>选择棋手</span><b class="chevron">⌄</b></button><div class="bans" id="bans" role="group" aria-label="点击禁用阵营，可多选"></div><button class="round" id="nextRound" aria-label="新一局，重选棋手和禁用">新局</button></div>
+ <div class="toolbar"><button class="status loading" id="status" aria-label="查看同步状态"><span class="dot"></span><span id="statusText">正在检查更新</span></button><button class="scope" id="scope" hidden>排除</button><div class="sorts" aria-label="阵容排序"><button class="sort active" data-sort="avgPlacement">均名</button><button class="sort" data-sort="top3Rate">前三</button><button class="sort" data-sort="firstRate">登顶</button></div><button class="tool refresh" id="refresh" aria-label="刷新阵容">↻</button><button class="tool" id="appearanceTrigger" aria-label="透明度与大小" aria-expanded="false">外观</button></div>
+ <div class="workspace"><section class="candidates" id="candidates" aria-label="推荐阵容"><div class="empty-list">等待选择棋手</div></section><section class="detail" id="detail" aria-label="当前阵容"><div class="empty"><b>选择棋手，直接看阵容</b>上方点选禁用<br>左侧切换阵容</div></section></div>
+ <div class="popover commander-menu" id="commanderMenu" role="listbox" aria-label="棋手下拉菜单" hidden></div>
+ <div class="popover hero-menu" id="heroMenu" role="listbox" aria-label="切换英雄查看装备" hidden></div>
+ <section class="popover appearance" id="appearance" hidden><div class="pop-head"><strong>悬浮窗外观</strong><button class="close-pop" id="closeAppearance" aria-label="关闭外观设置">×</button></div><label class="setting-label" for="opacity">不透明度 <output id="opacityValue">88%</output></label><input id="opacity" type="range" min="30" max="100" value="88"><label class="setting-label" for="width">宽度 <output id="widthValue">392 dp</output></label><input id="width" type="range" min="250" max="960" value="392"><label class="setting-label" for="height">高度 <output id="heightValue">230 dp</output></label><input id="height" type="range" min="170" max="900" value="230"></section>
+ <section class="popover message" id="message" hidden><div class="pop-head"><strong id="messageTitle">数据状态</strong><button class="close-pop" id="closeMessage" aria-label="关闭提示">×</button></div><div id="messageText"></div></section>
+ <div class="toast" id="toast" role="status" hidden></div>
+</main><script src="logic.js"></script><script src="overlay.js"></script>
+</body></html>

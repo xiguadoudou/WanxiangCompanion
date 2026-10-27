@@ -4,8 +4,10 @@ on:
     branches: [main]
     paths:
       - 'updates/**'
+      - 'android/**'
       - '.github/workflows/publish-update.yml'
-      - '.github/scripts/publish-release.py'
+      - '.github/scripts/**'
+      - 'tests/test_source_release.py'
   workflow_dispatch:
 permissions:
   contents: write
@@ -20,7 +22,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Verify package and publish release
+      - name: Check APK/source publication rules
+        run: python3 -m unittest discover -s tests -p 'test_source_release.py' -v
+      - name: Verify package and publish APK with source
         env:
           GH_TOKEN: ${{ github.token }}
         run: python3 .github/scripts/publish-release.py

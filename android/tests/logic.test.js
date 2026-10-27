@@ -1,0 +1,18 @@
+const assert=require('node:assert/strict');
+const L=require('../assets/logic.js');
+const q={commanderId:'commander-r1',commanderName:'小妲己',bans:['河洛'],sort:'avgPlacement',days:7,minCount:50};
+const one=L.makePayload(q,'v261022');
+assert.equal(one.filters.length,2);
+assert.deepEqual(one.filters[1],{type:'faction',id:'河洛',banned:true,switchVal:true});
+assert.equal(L.makePayload({...q,bans:['河洛','逐鹿']},'v261022').filters.length,1,'Multiple exclusions must not become nonexistent simultaneous-ban match statistics');
+assert.equal(L.allowed({heroes:[{faction:'河洛'}]},['河洛']),false);
+assert.equal(L.allowed({heroes:[{faction:'日落海'},{faction:'无阵营'}]},['河洛','逐鹿']),true);
+assert.equal(L.allowed({heroes:[{faction:''}]},['河洛']),false,'Unknown hero affiliations cannot leak through exclusion filters');
+assert.equal(L.queryKey(q),L.queryKey({...q,bans:['河洛','河洛','未知阵营']}));
+assert.deepEqual(L.rank([{avgPlacement:4,count:100},{avgPlacement:2,count:50}],'avgPlacement').map(x=>x.avgPlacement),[2,4]);
+assert.equal(L.makePayload({...q,days:999,sort:'invalid'},'v261022').time,7);
+assert.throws(()=>L.makePayload({...q,commanderId:''},'v261022'));
+const names=[...L.FACTIONS];L.configureCatalog({factions:[...names.map(name=>({name,image:''})),{name:'测试阵营',image:'https://example.com/new.png'}]});
+assert.ok(L.FACTIONS.includes('测试阵营'),'A newly supplied faction can appear without an APK update');assert.deepEqual(L.cleanBans(['测试阵营','河洛']),['河洛','测试阵营']);assert.equal(L.makePayload({...q,bans:['测试阵营']},'v261022').filters[1].id,'测试阵营');assert.equal(L.factionImage('河洛'),'factions/heluo.png');assert.equal(L.factionImage('测试阵营'),'https://example.com/new.png');L.configureCatalog({});assert.deepEqual(L.FACTIONS,names);
+assert.equal(L.makePayload({...q,minCount:undefined},'v261022').minimumCount,10);assert.equal(JSON.parse(L.queryKey({...q,minCount:undefined})).at(-1),10);
+console.log('Recommendation, automatic faction metadata and local icon fallback assertions passed');
