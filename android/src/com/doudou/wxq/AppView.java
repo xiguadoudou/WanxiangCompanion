@@ -53,6 +53,7 @@ final class AppView extends WebView implements Repository.Listener {
             case "save":repo.saveUi(data);break;
             case "resetRound":repo.resetRound();break;
             case "refresh":repo.checkUpdates();break;
+            case "downloadPage":if(!overlay)getContext().startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse(UpdateRoutes.DOWNLOAD_PAGE)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));break;
             case "checkSoftwareUpdate":if(!overlay)repo.updater.check();break;
             case "downloadSoftwareUpdate":if(!overlay)repo.updater.download();break;
             case "installSoftwareUpdate":if(!overlay&&getContext() instanceof MainActivity)((MainActivity)getContext()).installUpdate();break;

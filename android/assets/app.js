@@ -66,7 +66,7 @@
  function newRound(){resetRoundUi();cmd('resetRound');}
  function closeUpdateDialog(){if($('updateDialog').open)$('updateDialog').close();}
  function renderUpdateDialog(e){
-  $('updateCurrentVersion').textContent='当前 '+(e.installedVersion||'0.1.10');$('updateLatestVersion').textContent=e.latestVersion||'';
+  $('updateCurrentVersion').textContent='当前 '+(e.installedVersion||'0.1.11');$('updateLatestVersion').textContent=e.latestVersion||'';
   const notes=String(e.notes||'').trim()||'本版本暂无更新说明。';if($('updateChangelog').textContent!==notes)$('updateChangelog').textContent=notes;
   const active=['checking','downloading'].includes(e.state),error=e.state==='error';
   $('updateDialogStatus').textContent=e.message||'';$('updateDialogStatus').hidden=!['downloading','ready','error','checking'].includes(e.state);$('updateDialogStatus').classList.toggle('error',error);
@@ -83,7 +83,7 @@
  function renderUpdater(event={}){
   const e={...softwareState,...event};if(e.state==='current'){e.available=false;e.downloadReady=false;}softwareState=e;
   const active=['checking','downloading'].includes(e.state);
-  $('installedVersion').textContent='当前 '+(e.installedVersion||'0.1.10');$('softwareStatus').textContent=e.message||'打开应用自动检查软件版本';
+  $('installedVersion').textContent='当前 '+(e.installedVersion||'0.1.11');$('softwareStatus').textContent=e.message||'打开应用自动检查软件版本';
   $('softwareNotes').textContent=e.notes||'';$('softwareNotes').hidden=!e.notes;
   $('softwareProgress').hidden=e.state!=='downloading';$('softwareProgress').value=e.progress||0;
   $('checkSoftware').disabled=active;$('downloadSoftware').hidden=!e.available||e.downloadReady;$('downloadSoftware').disabled=active;
@@ -139,6 +139,7 @@
  document.querySelectorAll('[data-min]').forEach(b=>b.onclick=()=>{ui.minCount=+b.dataset.min;renderStyle();save();request();});
  $('refresh').onclick=()=>{$('refresh').classList.add('busy-refresh');cmd('refresh');if(ui.commanderId)request();};
  $('updateButton').onclick=()=>{setSettings(true);$('softwareCard').scrollIntoView({behavior:'smooth',block:'center'});};
+ $('downloadPage').onclick=()=>cmd('downloadPage');
  $('checkSoftware').onclick=()=>{manualUpdateCheck=true;cmd('checkSoftwareUpdate');};$('downloadSoftware').onclick=()=>cmd('downloadSoftwareUpdate');$('installSoftware').onclick=()=>cmd('installSoftwareUpdate');
  $('updateLater').onclick=closeUpdateDialog;
  $('updateDialog').addEventListener('close',()=>document.body.classList.remove('has-update-dialog'));

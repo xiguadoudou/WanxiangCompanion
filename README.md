@@ -1,10 +1,18 @@
 # 万象弈伴 · GitHub 更新
 
-Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.10**，包名 `com.doudou.wxq`，版本号 11。
+Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.11**，包名 `com.doudou.wxq`，版本号 12。
 
-[查看 Android 源码](android/) · [下载当前源码包](https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.10/WanxiangCompanion-0.1.10-source.zip)
+[查看 Android 源码](android/) · [下载当前源码包](https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.11/WanxiangCompanion-0.1.11-source.zip)
 
-[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.10.apk)
+[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.11.apk)
+
+## 0.1.11 GitHub 更新加速
+
+软件版本检查优先使用 GHFast 加速通道，无法连接、超时或返回无效信息时自动切换到 GitHub 官方与 Pages 备用版本资料。APK 下载同样优先加速，再尝试官方地址，每条线路均检查文件大小、SHA-256、包名、版本和原签名。
+
+公开加速服务目前已验证可以读取版本资料和下载与官方摘要相同的 APK，但无法承诺所有地区持续可达。旧版更新检查已失败的手机，需要先[手动通过加速链接覆盖安装 0.1.11](https://ghfast.top/https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.11/WanxiangCompanion-0.1.11.apk)，之后才会自动使用新线路。加速仅用于公开的软件更新文件，不需要 GitHub 账号或手机全局代理。
+
+版本资料在 `updates/latest.json` 和 `docs/latest.json` 同步保存，发布检查会拒绝二者不一致的版本；以后维护更新时也必须同时更新这两个文件。
 
 ## 0.1.10 悬浮窗兼容与图片缓存
 
@@ -63,7 +71,7 @@ Android 源码位于 [android/](android/)，包括 Java 实现、主页面和悬
 0.1.9 的源码是在已有 Release 上补充的，请使用明确命名的 `WanxiangCompanion-0.1.9-source.zip` 附件；该旧标签自动生成的 “Source code” ZIP 不包含此次新增的 Android 目录。以后在包含源码的提交上创建新版本标签。
 
 1. 修改 `android/` 中的完整实现，更新 Manifest 和 `BuildInfo.java` 的版本号；在私有环境沿用原签名构建 APK。
-2. 将正式 APK 放入 `updates/`，更新 `updates/latest.json` 的版本、地址、大小、SHA-256 和更新说明，与本版源码在同次提交中更新到 main。
+2. 将正式 APK 放入 `updates/`，更新 `updates/latest.json` 的版本、地址、大小、SHA-256 和更新说明，并复制相同内容到 `docs/latest.json`，与本版源码在同次提交中更新到 main。
 3. GitHub Actions 校验 APK 摘要、源码版本和 APK 的全部 assets，生成只包含公开源码的 ZIP，并一同发布 APK、版本资料与源码附件。缺失或不匹配的源码会阻止发布。
 4. 每版包含 `WanxiangCompanion-<版本>-source.zip`，并附带固定名 `WanxiangCompanion-source.zip`，可通过 Releases 最新版本下载。`SOURCE.json` 记录对应 APK 摘要和源码文件摘要。
 

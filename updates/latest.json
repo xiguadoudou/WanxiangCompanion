@@ -1,12 +1,12 @@
 {
   "packageName": "com.doudou.wxq",
-  "versionCode": 11,
-  "versionName": "0.1.10",
-  "apkUrl": "https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.10/WanxiangCompanion-0.1.10.apk",
+  "versionCode": 12,
+  "versionName": "0.1.11",
+  "apkUrl": "https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.11/WanxiangCompanion-0.1.11.apk",
   "apkFallbackUrls": [
-    "https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.10.apk"
+    "https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.11.apk"
   ],
-  "sha256": "693d13d774135066a3f64dccc5ff7f0f124a1ec58195d14bf96f94a5eef18dea",
+  "sha256": "2972cf873964ad96d4070675064a9461eaab24525748563faf0e7e4343c9d61c",
   "sizeBytes": 99742,
-  "notes": "1. 重做悬浮图标与面板切换，使用同一个系统窗口，避免图标迁移导致一起消失；打开失败时退回小图标并支持重试。\n2. 软件内点击启用，权限完成且收到系统窗口创建成功回执后自动返回桌面；失败、超时或取消时保留主程序。\n3. 新增首次进入后台图片预载，首页和浮层共享棋手、英雄、装备图片的持久缓存；刷新和重启优先复用，减少重复流量。\n4. 图片缓存约 48 MB 上限，支持过期检查、ETag/304、断网旧图、损坏重下和并发下载合并；设置页可查看缓存进度。\n5. 保留默认常小娥、最小样本 10 场、小窗完整资料、复制与自动更新。本版 APK 与源码同步发布。"
+  "notes": "1. 软件版本检查和 APK 下载优先使用 GitHub 加速通道，无需配置手机全局代理。\n2. 加速不可用、超时、返回错误网页或无效资料时，自动尝试备用和官方线路；增加 GitHub Pages 版本资料镜像。\n3. 每条下载线路保留大小、SHA-256、包名、版本和原签名校验，校验失败会切换线路。\n4. 更新区新增下载页入口，区分域名解析、超时、HTTPS 校验和版本资料异常。\n5. APK 与对应源码同步发布。旧版更新检查失败的手机需先手动覆盖安装本版，之后自动使用加速线路。"
 }

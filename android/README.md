@@ -7,6 +7,15 @@
 - `res/`、`AndroidManifest.xml`：安卓资源、组件和权限。
 - `tests/`：保留的原生与界面回归检查，`fixtures/` 为历史公开数据响应测试资料，产品不使用这些测试响应代替在线推荐。
 
+## 0.1.11 软件更新加速
+
+- 软件版本检查优先访问 GHFast 的公开 GitHub 文件中转，失败后依次检查 GitHub Raw 官方地址和 GitHub Pages 的版本资料镜像。元数据使用独立连接/读取超时，返回错误网页、校验不通过或较旧版本信息时会尝试下一条线路。
+- APK 优先尝试加速后的版本附件与仓库备用文件，再回到 GitHub 官方下载。版本资料保留官方原始 URL，客户端只为本仓库的公开 Release/updates 文件生成加速地址，不传递账号或访问令牌。
+- 每条下载线路都核验文件大小、SHA-256、包名、版本与原签名。保留平台 HTTPS 校验，任何线路验证失败都不能直接安装；可以换下一条线路重试。
+- 设置中的软件更新区可打开下载页；错误信息区分域名解析、超时、HTTPS 校验和无效版本资料。
+- 发布时要求 `docs/latest.json` 与 `updates/latest.json` 逐字节一致，保持 Pages 备用检查源随新版本更新。
+- 公共加速服务的可达性会随运营与网络变化，无法保证每个地区/运营商持续可用。旧版若已经无法访问 GitHub Raw，需要先手动覆盖安装一次新客户端；只有新客户端会使用加速线路。
+
 ## 0.1.10 悬浮兼容与图片缓存
 
 - 图标始终留在同一个原生系统窗口，展开与收起只更新窗口尺寸、可见性和内容，不再在系统窗口与面板之间迁移图标。点击动作在当前触摸事件结束后执行。
@@ -65,14 +74,15 @@ node tests/compact-details.test.cjs
 mkdir -p build/native-test
 java -m jdk.compiler/com.sun.tools.javac.Main --release 8 -encoding UTF-8 \
   -cp "$WXQ_JSON_JAR" -d build/native-test \
-  src/com/doudou/wxq/{BuildInfo,RoundSelection,OverlayGeometry,OverlayState,DragTapTracker,OverlayWindowSession,OverlayStartGate,ImageDiskCache,UpdateTransport,UpdateContract}.java \
-  tests/{RoundSelectionTest,OverlayModelTest,OverlayReliabilityTest,ImageDiskCacheTest,UpdateContractTest,UpdateTransportTest}.java
+  src/com/doudou/wxq/{BuildInfo,RoundSelection,OverlayGeometry,OverlayState,DragTapTracker,OverlayWindowSession,OverlayStartGate,ImageDiskCache,UpdateTransport,UpdateContract,UpdateRoutes,UpdateCheck}.java \
+  tests/{RoundSelectionTest,OverlayModelTest,OverlayReliabilityTest,ImageDiskCacheTest,UpdateContractTest,UpdateTransportTest,UpdateRoutesTest}.java
 java -cp "build/native-test:$WXQ_JSON_JAR" com.doudou.wxq.RoundSelectionTest
 java -cp "build/native-test:$WXQ_JSON_JAR" com.doudou.wxq.OverlayModelTest
 java -cp "build/native-test:$WXQ_JSON_JAR" com.doudou.wxq.OverlayReliabilityTest
 java -cp "build/native-test:$WXQ_JSON_JAR" com.doudou.wxq.ImageDiskCacheTest
 java -cp "build/native-test:$WXQ_JSON_JAR" com.doudou.wxq.UpdateContractTest
 java -cp "build/native-test:$WXQ_JSON_JAR" com.doudou.wxq.UpdateTransportTest
+java -cp "build/native-test:$WXQ_JSON_JAR" com.doudou.wxq.UpdateRoutesTest
 ```
 
 ## 发布与源码对应关系

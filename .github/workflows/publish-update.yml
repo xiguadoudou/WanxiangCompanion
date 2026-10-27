@@ -30,7 +30,20 @@ jobs:
           java -m jdk.compiler/com.sun.tools.javac.Main --release 8 -encoding UTF-8 -d "$RUNNER_TEMP/wxq-native" android/src/com/doudou/wxq/{BuildInfo,OverlayState,OverlayWindowSession,OverlayStartGate,ImageDiskCache}.java android/tests/{OverlayReliabilityTest,ImageDiskCacheTest}.java
           java -cp "$RUNNER_TEMP/wxq-native" com.doudou.wxq.OverlayReliabilityTest
           java -cp "$RUNNER_TEMP/wxq-native" com.doudou.wxq.ImageDiskCacheTest
+      - name: Check update proxy routing and fallback
+        run: |
+          curl --fail --silent --show-error --retry 2 https://repo.maven.apache.org/maven2/org/json/json/20240303/json-20240303.jar -o "$RUNNER_TEMP/wxq-json.jar"
+          python3 - <<'PY_HASH'
+          import hashlib, os
+          from pathlib import Path
+          assert hashlib.sha256(Path(os.environ['RUNNER_TEMP'], 'wxq-json.jar').read_bytes()).hexdigest() == '3cf6cd6892e32e2b4c1c39e0f52f5248a2f5b37646fdfbb79a66b46b618414ed'
+          PY_HASH
+          mkdir -p "$RUNNER_TEMP/wxq-updates"
+          java -m jdk.compiler/com.sun.tools.javac.Main --release 8 -encoding UTF-8 -cp "$RUNNER_TEMP/wxq-json.jar" -d "$RUNNER_TEMP/wxq-updates" android/src/com/doudou/wxq/{BuildInfo,UpdateContract,UpdateTransport,UpdateRoutes,UpdateCheck}.java android/tests/{UpdateRoutesTest,UpdateContractTest}.java
+          java -cp "$RUNNER_TEMP/wxq-updates:$RUNNER_TEMP/wxq-json.jar" com.doudou.wxq.UpdateRoutesTest
+          java -cp "$RUNNER_TEMP/wxq-updates:$RUNNER_TEMP/wxq-json.jar" com.doudou.wxq.UpdateContractTest
       - name: Verify package and publish APK with source
+        # Metadata fallback and canonical/proxy URL rules are also checked on the host JVM.
         env:
           GH_TOKEN: ${{ github.token }}
         run: python3 .github/scripts/publish-release.py

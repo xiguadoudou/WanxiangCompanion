@@ -15,6 +15,7 @@ def main():
     assert repo == 'xiguadoudou/WanxiangCompanion', 'Wrong release repository'
     manifest_path = Path('updates/latest.json')
     m = json.loads(manifest_path.read_text())
+    assert Path('docs/latest.json').read_bytes() == manifest_path.read_bytes(), 'Pages update feed differs from canonical manifest'
     version = m['versionName']
     assert re.fullmatch(r'\d+\.\d+\.\d+', version), 'Invalid version name'
     assert m['packageName'] == 'com.doudou.wxq' and type(m['versionCode']) is int and m['versionCode'] > 0

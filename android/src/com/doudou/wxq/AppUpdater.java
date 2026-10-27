@@ -11,24 +11,24 @@ import java.util.concurrent.*;
 
 final class AppUpdater {
  private final Repository repo;private final ExecutorService io=Executors.newSingleThreadExecutor();
- private JSONObject manifest;private String phase="idle",message="打开应用自动检查软件版本";private int progress=0;private boolean busy=false,verified=false;
+ private JSONObject manifest;private String activeSource="GitHub 加速";private String phase="idle",message="打开应用自动检查软件版本";private int progress=0;private boolean busy=false,verified=false;
  AppUpdater(Repository r){repo=r;}
- synchronized JSONObject state(){JSONObject s=new JSONObject();Repository.put(s,"state",phase);Repository.put(s,"source","GitHub");Repository.put(s,"message",message);Repository.put(s,"installedVersion",BuildInfo.VERSION_NAME);Repository.put(s,"latestVersion",manifest==null?"":manifest.optString("versionName"));Repository.put(s,"latestVersionCode",manifest==null?0:manifest.optInt("versionCode"));Repository.put(s,"notes",manifest==null?"":manifest.optString("notes"));Repository.put(s,"progress",progress);Repository.put(s,"downloadReady",verified&&file().isFile());Repository.put(s,"available",manifest!=null&&UpdateContract.newer(manifest));return s;}
+ synchronized JSONObject state(){JSONObject s=new JSONObject();Repository.put(s,"state",phase);Repository.put(s,"source",activeSource);Repository.put(s,"message",message);Repository.put(s,"installedVersion",BuildInfo.VERSION_NAME);Repository.put(s,"latestVersion",manifest==null?"":manifest.optString("versionName"));Repository.put(s,"latestVersionCode",manifest==null?0:manifest.optInt("versionCode"));Repository.put(s,"notes",manifest==null?"":manifest.optString("notes"));Repository.put(s,"progress",progress);Repository.put(s,"downloadReady",verified&&file().isFile());Repository.put(s,"available",manifest!=null&&UpdateContract.newer(manifest));return s;}
  private synchronized void emit(String p,String text,int percent){phase=p;message=text;progress=percent;JSONObject e=state();Repository.put(e,"type","softwareUpdate");repo.post(e);}
- synchronized void check(){if(busy)return;busy=true;io.execute(()->{try{emit("checking","正在检查 GitHub 新版本…",0);JSONObject m=UpdateContract.validate(new JSONObject(UpdateTransport.metadata(BuildInfo.UPDATE_URL+"?t="+System.currentTimeMillis())));synchronized(this){boolean same=manifest!=null&&manifest.optInt("versionCode")==m.optInt("versionCode")&&manifest.optString("sha256").equalsIgnoreCase(m.optString("sha256"));manifest=m;if(!same)verified=false;}boolean ready=canInstall()&&UpdateContract.newer(m);emit(ready?"ready":UpdateContract.newer(m)?"available":"current",ready?"安装包已校验完成，可安装更新":UpdateContract.newer(m)?"发现新版本 "+m.optString("versionName"):"已是最新版本 "+BuildInfo.VERSION_NAME,ready?100:0);}catch(Exception e){emit("error","软件更新检查失败："+e.getMessage(),0);}finally{synchronized(this){busy=false;}}});}
+ synchronized void check(){if(busy)return;busy=true;io.execute(()->{try{emit("checking","正在检查 GitHub 新版本…",0);UpdateCheck.Result answer=UpdateCheck.load(UpdateTransport::metadata,(source,index,total)->emit("checking","正在检查软件版本 "+index+"/"+total+" · "+source,0));JSONObject m=answer.manifest;synchronized(this){boolean same=manifest!=null&&manifest.optInt("versionCode")==m.optInt("versionCode")&&manifest.optString("sha256").equalsIgnoreCase(m.optString("sha256"));manifest=m;activeSource=answer.source;if(!same)verified=false;}boolean ready=canInstall()&&UpdateContract.newer(m);emit(ready?"ready":UpdateContract.newer(m)?"available":"current",ready?"安装包已校验完成，可安装更新":UpdateContract.newer(m)?"发现新版本 "+m.optString("versionName"):"已是最新版本 "+BuildInfo.VERSION_NAME,ready?100:0);}catch(Exception e){emit("error","软件更新检查失败："+e.getMessage(),0);}finally{synchronized(this){busy=false;}}});}
  File file(){return new File(repo.app.getCacheDir(),"update.apk");}
  synchronized void download(){
   if(busy)return;if(manifest==null||!UpdateContract.newer(manifest)){emit("error","请先检查软件新版本",0);return;}
   busy=true;final JSONObject m=manifest;verified=false;
   io.execute(()->{File part=new File(repo.app.getCacheDir(),"update.apk.part");try{
-   List<String> urls=UpdateContract.downloadUrls(m);Exception failure=null;boolean downloaded=false;
+   List<UpdateRoutes.Route> urls=UpdateRoutes.downloads(m);Exception failure=null;boolean downloaded=false;
    for(int i=0;i<urls.size();i++){
-    emit("downloading",i==0?"正在从 GitHub 下载更新…":"正在切换 GitHub 备用下载…",0);
-    try{UpdateTransport.download(urls.get(i),part,m.getLong("sizeBytes"),m.getString("sha256"),pct->emit("downloading","正在下载更新 "+pct+"%",pct));downloaded=true;break;}
+    UpdateRoutes.Route route=urls.get(i);synchronized(this){activeSource=route.label;}emit("downloading","正在下载更新 · "+route.label+"（"+(i+1)+"/"+urls.size()+"）",0);
+    try{UpdateTransport.download(route.url,part,m.getLong("sizeBytes"),m.getString("sha256"),pct->emit("downloading","正在下载更新 "+pct+"% · "+route.label,pct));verifyPackage(part,m);downloaded=true;break;}
     catch(Exception e){failure=e;part.delete();}
    }
    if(!downloaded)throw failure==null?new IOException("GitHub 下载暂时不可用"):failure;
-   verifyPackage(part,m);if(file().exists()&&!file().delete())throw new IOException("无法替换旧安装包");if(!part.renameTo(file()))throw new IOException("无法保存安装包");
+   if(file().exists()&&!file().delete())throw new IOException("无法替换旧安装包");if(!part.renameTo(file()))throw new IOException("无法保存安装包");
    synchronized(this){verified=true;}emit("ready","下载并校验完成，可安装更新",100);
   }catch(Exception e){part.delete();emit("error","更新下载失败："+e.getMessage(),0);}finally{synchronized(this){busy=false;}}});
  }

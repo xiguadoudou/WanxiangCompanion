@@ -17,11 +17,12 @@ final class UpdateTransport {
   if(location==null||location.trim().isEmpty())throw new IOException("下载跳转地址为空");
   return https(https(from).resolve(location.trim()).toString()).toString();
  }
- static HttpURLConnection open(String raw)throws Exception{
+ static HttpURLConnection open(String raw)throws Exception{return open(raw,12000,20000);}
+ static HttpURLConnection open(String raw,int connectTimeout,int readTimeout)throws Exception{
   String url=https(raw).toString();Set<String> visited=new HashSet<>();
   for(int redirects=0;;redirects++){
    if(!visited.add(url))throw new IOException("更新地址出现循环跳转");
-   HttpURLConnection c=(HttpURLConnection)new URL(url).openConnection();c.setConnectTimeout(12000);c.setReadTimeout(20000);c.setInstanceFollowRedirects(false);c.setUseCaches(false);
+   HttpURLConnection c=(HttpURLConnection)new URL(url).openConnection();c.setConnectTimeout(connectTimeout);c.setReadTimeout(readTimeout);c.setInstanceFollowRedirects(false);c.setUseCaches(false);
    c.setRequestProperty("User-Agent","WanxiangCompanion/"+BuildInfo.VERSION_NAME);c.setRequestProperty("Accept","application/json,application/octet-stream,*/*");c.setRequestProperty("Cache-Control","no-cache");
    try{
     int code=c.getResponseCode();
@@ -31,7 +32,7 @@ final class UpdateTransport {
   }
  }
  static String metadata(String url)throws Exception{
-  HttpURLConnection c=open(url);try(InputStream in=c.getInputStream();ByteArrayOutputStream out=new ByteArrayOutputStream()){
+  HttpURLConnection c=open(url,5000,8000);try(InputStream in=c.getInputStream();ByteArrayOutputStream out=new ByteArrayOutputStream()){
    byte[] b=new byte[4096];int n;while((n=in.read(b))!=-1){if(out.size()+n>100000)throw new IOException("更新信息超过大小限制");out.write(b,0,n);}return new String(out.toByteArray(),StandardCharsets.UTF_8);
   }finally{c.disconnect();}
  }

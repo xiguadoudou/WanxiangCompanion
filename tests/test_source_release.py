@@ -27,8 +27,10 @@ class SourceReleaseTest(unittest.TestCase):
         self.manifest = json.loads((REPO / 'updates/latest.json').read_text())
         self.name = 'WanxiangCompanion-' + self.manifest['versionName'] + '.apk'
         (self.work / 'updates').mkdir()
+        (self.work / 'docs').mkdir()
         shutil.copyfile(REPO / 'updates' / self.name, self.work / 'updates' / self.name)
         shutil.copyfile(REPO / 'updates/latest.json', self.work / 'updates/latest.json')
+        shutil.copyfile(REPO / 'docs/latest.json', self.work / 'docs/latest.json')
         self.old = Path.cwd()
         os.chdir(self.work)
         self.remote = {self.name: Path('updates', self.name).read_bytes(), 'WanxiangCompanion.apk': Path('updates', self.name).read_bytes(), 'latest.json': Path('updates/latest.json').read_bytes()}
@@ -117,6 +119,12 @@ class SourceReleaseTest(unittest.TestCase):
         with self.assertRaisesRegex(AssertionError, 'Published asset differs'):
             self.publish()
         self.assertFalse(any(c[1:3] == ['release', 'upload'] for c in self.calls))
+
+    def test_pages_feed_must_match(self):
+        Path('docs/latest.json').write_text('{}')
+        with self.assertRaisesRegex(AssertionError, 'Pages update feed differs'):
+            self.publish()
+        self.assertEqual(self.calls, [])
 
     def test_new_release_requires_both_apk_and_source(self):
         self.existing = False

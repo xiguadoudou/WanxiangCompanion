@@ -12,7 +12,7 @@ public final class UpdateTransportTest {
   JSONObject m=new JSONObject().put("apkUrl",from).put("apkFallbackUrls",new JSONArray().put(from).put("https://raw.githubusercontent.com/x/y/main/a.apk"));check(UpdateContract.downloadUrls(m).size()==2);
   m.put("apkFallbackUrls",new JSONArray().put("http://example.com/a.apk"));try{UpdateContract.downloadUrls(m);throw new AssertionError();}catch(IOException expected){}
   System.out.println("HTTPS redirect resolution and GitHub fallback validation passed.");
-  if(args.length>0){JSONObject live=UpdateContract.validate(new JSONObject(UpdateTransport.metadata(BuildInfo.UPDATE_URL+"?t="+System.currentTimeMillis())));File f=new File("build/github-live-download.apk");UpdateTransport.download(live.getString("apkUrl"),f,live.getLong("sizeBytes"),live.getString("sha256"),p->{});for(String url:UpdateContract.downloadUrls(live)){UpdateTransport.download(url,new File("build/github-fallback-download.apk"),live.getLong("sizeBytes"),live.getString("sha256"),p->{});}
-   System.out.println("Live GitHub metadata, release redirect, fallback download and SHA-256 passed: "+live.getString("versionName"));}
+  if(args.length>0){JSONObject live=UpdateContract.validate(new JSONObject(UpdateTransport.metadata(UpdateRoutes.metadata(System.currentTimeMillis()).get(0).url)));File f=new File("build/github-live-download.apk");UpdateTransport.download(UpdateRoutes.downloads(live).get(0).url,f,live.getLong("sizeBytes"),live.getString("sha256"),p->{});for(String url:UpdateContract.downloadUrls(live)){UpdateTransport.download(url,new File("build/github-fallback-download.apk"),live.getLong("sizeBytes"),live.getString("sha256"),p->{});}
+   System.out.println("Live accelerated metadata/APK, official fallback and SHA-256 passed: "+live.getString("versionName"));}
  }
 }
