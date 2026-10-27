@@ -1,12 +1,20 @@
 # 万象弈伴 · GitHub 更新
 
-Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.7**，包名 `com.doudou.wxq`，版本号 8。
+Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.8**，包名 `com.doudou.wxq`，版本号 9。
 
-[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.7.apk)
+[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.8.apk)
+
+## 小窗口完整资料
+
+0.1.8 起，小窗口详情区也包含样本说明和全队装备速览，向下滑动即可查看；窗口尺寸只改变排版，不再隐藏这些资料。首页和设置页末尾标注“软件由 ChatGPT 构建”。
+
+每次进入主程序会清空本局棋手、禁用阵营和当前阵容，保留透明度、窗口大小及统计设置；游戏内展开/收起悬浮窗不清空。
+
+默认阵容最小样本为 **10 场**，可在设置中改为其他值并保存。
 
 ## 阵容数据同步与阵营图标
 
-打开或返回软件时检查资料并刷新当前条件的推荐，网站新增的普通阵容组合无需重新安装 App，按棋手、禁用、样本量和排序自动参与查询。新增英雄资料和阵营列表也随网站资料读取；接口或玩法结构变化时可能需要客户端升级。
+打开或返回软件时检查资料并清空本局选择，选好棋手和禁用后查询当前推荐，网站新增的普通阵容组合无需重新安装 App，按棋手、禁用、样本量和排序自动参与查询。新增英雄资料和阵营列表也随网站资料读取；接口或玩法结构变化时可能需要客户端升级。
 
 首页的河洛、逐鹿、日落海、三分之地、大河流域按钮使用数据网站对应的原始图标，内置五张图片，离线也可显示。阵容推荐需要数据源正常可用；失败时保留对应条件的缓存并显示错误。候选有分页/数量限制，详情以实际数据范围为准。
 
