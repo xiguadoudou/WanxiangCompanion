@@ -3,13 +3,13 @@ const fs=require('fs'),assert=require('node:assert/strict'),{pathToFileURL}=requ
 (async()=>{
  const b=await chromium.launch({executablePath:process.env.WXQ_BROWSER_PATH,args:['--no-sandbox']});try{
  const p=await b.newPage({viewport:{width:390,height:844}});const errors=[];p.on('pageerror',e=>errors.push(e.message));
- const catalog=JSON.parse(fs.readFileSync('assets/catalog-snapshot.json'));const data=JSON.parse(fs.readFileSync('build/native-live-result.json'));
+ const catalog=JSON.parse(fs.readFileSync('assets/catalog-snapshot.json'));const data=JSON.parse(fs.readFileSync('tests/fixtures/ui-fixture.json')).data;
  data.queryKey=JSON.stringify(['commander-r1',['河洛'],'avgPlacement',7,50]);
- await p.addInitScript(({catalog,data})=>{window.sent=[];window.Native={initialState:()=>JSON.stringify({type:'init',catalog,data,prefs:{commanderId:'commander-r1',bans:['河洛'],minCount:50},updater:{state:'checking',installedVersion:'0.1.3',message:'正在检查软件版本…'}}),command:x=>sent.push(JSON.parse(x))};},{catalog,data});
+ await p.addInitScript(({catalog,data})=>{window.sent=[];window.Native={initialState:()=>JSON.stringify({type:'init',catalog,data,imageCacheStatus:'图片缓存准备中 12/188',prefs:{commanderId:'commander-r1',bans:['河洛'],minCount:50},updater:{state:'checking',installedVersion:'0.1.3',message:'正在检查软件版本…'}}),command:x=>sent.push(JSON.parse(x))};},{catalog,data});
  await p.goto(pathToFileURL(process.cwd()+'/assets/index.html').href);assert.equal(await p.locator('.card').count(),data.rows.length,'Native HTTP response must render');
  await p.evaluate(()=>App.receive({type:'queryError',queryKey:JSON.stringify(['commander-r1',['河洛'],'avgPlacement',7,50]),message:'阵容查询失败：服务端异常'}));assert.equal(await p.locator('.card').count(),data.rows.length,'Query failure must retain matching cached cards');
  await p.evaluate(()=>App.receive({type:'dataStatus',state:'failed',message:'资料检查失败，仍可使用缓存'}));assert.equal(await p.locator('.card').count(),data.rows.length,'Metadata failure cannot erase lineups');assert.match(await p.locator('#dataSyncStatus').innerText(),/资料检查失败/);
- await p.locator('#updateButton').click();assert.equal(await p.locator('#checkSoftware').isDisabled(),true);
+ await p.locator('#updateButton').click();assert.match(await p.locator('#cacheStatus').innerText(),/12\/188/);await p.evaluate(()=>App.receive({type:'cacheStatus',message:'图片缓存 188/188 · 3.0 MB · 刷新优先使用本地'}));assert.match(await p.locator('#cacheStatus').innerText(),/刷新优先使用本地/);assert.equal(await p.locator('#checkSoftware').isDisabled(),true);
  await p.evaluate(()=>App.receive({type:'softwareUpdate',state:'available',available:true,installedVersion:'0.1.3',latestVersion:'0.1.4',message:'发现新版本 0.1.4',notes:'连接修复'}));
  await p.locator('#updateLater').click();await p.locator('#downloadSoftware').click();assert.equal(await p.evaluate(()=>sent.at(-1).action),'downloadSoftwareUpdate');
  await p.evaluate(()=>App.receive({type:'softwareUpdate',state:'downloading',available:true,message:'正在下载更新 42%',progress:42}));assert.equal(await p.locator('#softwareProgress').evaluate(el=>String(el.value)),'42');assert.equal(await p.locator('#downloadSoftware').isDisabled(),true);

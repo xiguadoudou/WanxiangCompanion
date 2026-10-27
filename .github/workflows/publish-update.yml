@@ -24,6 +24,12 @@ jobs:
           persist-credentials: false
       - name: Check APK/source publication rules
         run: python3 -m unittest discover -s tests -p 'test_source_release.py' -v
+      - name: Check overlay recovery and persistent image cache
+        run: |
+          mkdir -p "$RUNNER_TEMP/wxq-native"
+          java -m jdk.compiler/com.sun.tools.javac.Main --release 8 -encoding UTF-8 -d "$RUNNER_TEMP/wxq-native" android/src/com/doudou/wxq/{BuildInfo,OverlayState,OverlayWindowSession,OverlayStartGate,ImageDiskCache}.java android/tests/{OverlayReliabilityTest,ImageDiskCacheTest}.java
+          java -cp "$RUNNER_TEMP/wxq-native" com.doudou.wxq.OverlayReliabilityTest
+          java -cp "$RUNNER_TEMP/wxq-native" com.doudou.wxq.ImageDiskCacheTest
       - name: Verify package and publish APK with source
         env:
           GH_TOKEN: ${{ github.token }}

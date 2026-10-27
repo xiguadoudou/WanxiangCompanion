@@ -1,10 +1,18 @@
 # 万象弈伴 · GitHub 更新
 
-Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.9**，包名 `com.doudou.wxq`，版本号 10。
+Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.10**，包名 `com.doudou.wxq`，版本号 11。
 
-[查看 Android 源码](android/) · [下载当前源码包](https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.9/WanxiangCompanion-0.1.9-source.zip)
+[查看 Android 源码](android/) · [下载当前源码包](https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.10/WanxiangCompanion-0.1.10-source.zip)
 
-[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.9.apk)
+[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.10.apk)
+
+## 0.1.10 悬浮窗兼容与图片缓存
+
+- 图标和面板改用同一个原生系统窗口，展开/收起时不再移除和迁移图标；打开面板失败会退回小图标并允许重试。增加 WebView 显示进程异常后的清理与重建。
+- 软件内点击启用，权限流程结束且系统窗口准备成功后自动返回桌面。失败、超时或取消时保留主程序；主程序内仍隐藏悬浮内容。
+- 首次进入后台预载棋手、英雄、装备及阵营图片，首页和浮层共享持久缓存，同地址并发只下载一次；刷新或重启优先复用本地图片。图片地址变化会获取新图，过期用 ETag/Last-Modified 检查，断网保留已有图，容量约 48 MB。
+- 图片缓存状态可在设置中查看。阵容统计继续联网查询最新结果，保留对应筛选条件的缓存。
+- 已通过窗口切换与模拟拒绝恢复、启动回执、缓存重启/过期/断网/并发与容量回归，以及原签名构建。具体故障手机的系统权限与启动器仍需实机验证。
 
 ## 下载页面（GitHub Pages）
 
