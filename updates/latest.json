@@ -1,12 +1,12 @@
 {
   "packageName": "com.doudou.wxq",
-  "versionCode": 9,
-  "versionName": "0.1.8",
-  "apkUrl": "https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.8/WanxiangCompanion-0.1.8.apk",
+  "versionCode": 10,
+  "versionName": "0.1.9",
+  "apkUrl": "https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.9/WanxiangCompanion-0.1.9.apk",
   "apkFallbackUrls": [
-    "https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.8.apk"
+    "https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.9.apk"
   ],
-  "sha256": "a374f13acf0db9c65779ac0f14a6fe3c917f0a9461062fdcd680578860fa0bec",
+  "sha256": "e8dee90e565655e1e360d2a0879d64abea0cda14edb8f8e448b5b6fd66595186",
   "sizeBytes": 87454,
-  "notes": "1. 小尺寸悬浮窗也保留组合样本、当前变阵说明、全队均级和装备速览，向下滑动详情区即可查看。\n2. 首页和设置页底部新增“软件由 ChatGPT 构建”。\n3. 保留紧凑首屏和自适应排版，各尺寸不再隐藏完整阵容资料。\n4. 默认阵容最小样本改为 10 场；升级首次调整旧默认值，之后手动选择继续保存。\n5. 每次进入主程序重置本局棋手、禁用阵营和当前阵容，保留显示与筛选设置；悬浮窗开合不重置。"
+  "notes": "1. 进入主程序默认选择常小娥（嫦小娥），清空本局禁用阵营并自动查询阵容。\n2. 保留透明度、悬浮窗大小、样本数和排序；游戏内开合悬浮窗不重置。\n3. 新增 GitHub Pages 下载页，展示最新版本、更新内容、主下载与备用下载；仓库首次需启用 Pages。\n4. 保留最小样本默认 10 场、小窗滚动完整资料及阵容码复制。"
 }

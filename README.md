@@ -1,20 +1,34 @@
 # 万象弈伴 · GitHub 更新
 
-Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.8**，包名 `com.doudou.wxq`，版本号 9。
+Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.9**，包名 `com.doudou.wxq`，版本号 10。
 
-[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.8.apk)
+[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.9.apk)
+
+## 下载页面（GitHub Pages）
+
+页面源码位于 [docs/](docs/)，采用深色磨砂与薄荷绿按钮，适配手机及桌面。首次启用：
+
+1. 打开 [仓库 Pages 设置](https://github.com/xiguadoudou/WanxiangCompanion/settings/pages)。
+2. 在 **Build and deployment → Source** 选择 **Deploy from a branch**。
+3. Branch 选择 **main**，目录选择 **/docs**，点击 **Save**。
+
+GitHub 完成首次构建后，可访问 **https://xiguadoudou.github.io/WanxiangCompanion/**。
+
+网页每次加载读取本仓库 `updates/latest.json`，显示版本号、更新内容、主下载与备用下载。资料加载失败或禁用 JavaScript 时，下载入口仍指向 Releases 最新版本的固定名 `WanxiangCompanion.apk`。0.1.9 起发布脚本同时上传固定名与版本名 APK，两者内容一致。网页没有账户、无统计脚本，也不保存用户选择。
+
+本仓库连接不包含 Pages 管理权限，首次开关需要仓库所有者设置一次。后续不需要重复开关；发布版本资料后，页面读取新版本即可更新，不必逐次修改 HTML。
 
 ## 小窗口完整资料
 
 0.1.8 起，小窗口详情区也包含样本说明和全队装备速览，向下滑动即可查看；窗口尺寸只改变排版，不再隐藏这些资料。首页和设置页末尾标注“软件由 ChatGPT 构建”。
 
-每次进入主程序会清空本局棋手、禁用阵营和当前阵容，保留透明度、窗口大小及统计设置；游戏内展开/收起悬浮窗不清空。
+每次进入主程序会默认选择**常小娥**（也称嫦小娥），清空禁用阵营和当前阵容并自动查询，保留透明度、窗口大小及统计设置；游戏内展开/收起悬浮窗不清空。
 
 默认阵容最小样本为 **10 场**，可在设置中改为其他值并保存。
 
 ## 阵容数据同步与阵营图标
 
-打开或返回软件时检查资料并清空本局选择，选好棋手和禁用后查询当前推荐，网站新增的普通阵容组合无需重新安装 App，按棋手、禁用、样本量和排序自动参与查询。新增英雄资料和阵营列表也随网站资料读取；接口或玩法结构变化时可能需要客户端升级。
+打开或返回软件时检查资料、选择默认棋手并清空禁用；也可切换棋手和禁用后查询当前推荐，网站新增的普通阵容组合无需重新安装 App，按棋手、禁用、样本量和排序自动参与查询。新增英雄资料和阵营列表也随网站资料读取；接口或玩法结构变化时可能需要客户端升级。
 
 首页的河洛、逐鹿、日落海、三分之地、大河流域按钮使用数据网站对应的原始图标，内置五张图片，离线也可显示。阵容推荐需要数据源正常可用；失败时保留对应条件的缓存并显示错误。候选有分页/数量限制，详情以实际数据范围为准。
 

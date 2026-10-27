@@ -30,7 +30,7 @@ if existing.returncode == 0:
     info = json.loads(existing.stdout)
     if not info['isDraft']:
         assets = {a['name']: a for a in info['assets']}
-        assert name in assets and 'latest.json' in assets, 'Published release is missing assets'
+        assert name in assets and 'latest.json' in assets and 'WanxiangCompanion.apk' in assets, 'Published release is missing assets'
         assert assets[name]['size'] == len(blob), 'Published asset differs; bump the version'
         print(f'v{version} already published; leaving it intact')
         raise SystemExit(0)
@@ -40,6 +40,8 @@ with tempfile.TemporaryDirectory() as folder:
     notes.write_text(m.get('notes', '') + '\n\nAndroid 8.0+，沿用原签名，可覆盖升级。\n')
     if existing.returncode != 0:
         gh('release', 'create', f'v{version}', '--target', os.environ['GITHUB_SHA'], '--title', f'万象弈伴 {version}', '--notes-file', str(notes), '--draft')
-    gh('release', 'upload', f'v{version}', str(apk), 'updates/latest.json', '--clobber')
+    stable = Path(folder) / 'WanxiangCompanion.apk'
+    stable.write_bytes(blob)
+    gh('release', 'upload', f'v{version}', str(apk), str(stable), 'updates/latest.json', '--clobber')
     gh('release', 'edit', f'v{version}', '--draft=false', '--latest')
 print(f'Published https://github.com/{repo}/releases/tag/v{version}')
