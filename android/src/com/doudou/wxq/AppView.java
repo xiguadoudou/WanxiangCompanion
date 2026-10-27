@@ -13,10 +13,12 @@ import android.webkit.WebViewClient;
 import org.json.JSONObject;
 
 final class AppView extends WebView implements Repository.Listener {
+    interface FailureListener{void failed(AppView view);}
     private final Repository repo;
     private final boolean overlay;
-    private volatile boolean loaded=false;
-    AppView(Context context,boolean isOverlay){
+    private volatile boolean loaded=false,disposed=false;private boolean rendererGone=false;
+    AppView(Context context,boolean isOverlay){this(context,isOverlay,null);}
+    AppView(Context context,boolean isOverlay,FailureListener failure){
         super(context);overlay=isOverlay;repo=Repository.get(context);
         setBackgroundColor(Color.TRANSPARENT);
         setOverScrollMode(OVER_SCROLL_NEVER);
@@ -27,15 +29,16 @@ final class AppView extends WebView implements Repository.Listener {
         addJavascriptInterface(new Object(){
             @JavascriptInterface public String initialState(){loaded=true;return repo.state(overlay).toString();}
             @JavascriptInterface public void command(String raw){
-                if(raw==null||raw.length()>50000)return;
-                repo.main.post(()->dispatch(Repository.json(raw)));
+                if(disposed||raw==null||raw.length()>50000)return;
+                repo.main.post(()->{if(!disposed)dispatch(Repository.json(raw));});
             }
         },"Native");
         setWebViewClient(new WebViewClient(){
             @Override public boolean shouldOverrideUrlLoading(WebView v,WebResourceRequest r){return !r.getUrl().toString().equals("file:///android_asset/"+(overlay?"overlay.html":"index.html"));}
-            @Override public void onPageFinished(WebView v,String u){loaded=true;onEvent(repo.state(overlay));}
+            @Override public void onPageFinished(WebView v,String u){if(!disposed){loaded=true;onEvent(repo.state(overlay));}}
+            @Override public boolean onRenderProcessGone(WebView v,android.webkit.RenderProcessGoneDetail detail){rendererGone=true;dispose();if(failure!=null)repo.main.post(()->failure.failed(AppView.this));return true;}
         });
-        repo.add(this);loadUrl("file:///android_asset/"+(overlay?"overlay.html":"index.html"));
+        repo.add(this);try{loadUrl("file:///android_asset/"+(overlay?"overlay.html":"index.html"));}catch(RuntimeException e){dispose();throw e;}
     }
     private void dispatch(JSONObject c){
         String action=c.optString("action");JSONObject data=c.optJSONObject("data");if(data==null)data=new JSONObject();
@@ -58,7 +61,7 @@ final class AppView extends WebView implements Repository.Listener {
                 }
                 break;
             }
-            case "stop":repo.prefs.edit().putBoolean("overlay_enabled",false).apply();getContext().stopService(new Intent(getContext(),OverlayService.class));break;
+            case "stop":if(getContext() instanceof MainActivity)((MainActivity)getContext()).cancelOverlayStart();repo.prefs.edit().putBoolean("overlay_enabled",false).apply();getContext().stopService(new Intent(getContext(),OverlayService.class));break;
             case "minimize":if(OverlayService.instance!=null)OverlayService.instance.collapse();break;
             case "background":if(getContext() instanceof MainActivity)((MainActivity)getContext()).moveTaskToBack(true);break;
             case "source":getContext().startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse("https://www.datawxq.com/lineups")).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));break;
@@ -76,6 +79,6 @@ final class AppView extends WebView implements Repository.Listener {
             }
         }
     }
-    @Override public void onEvent(JSONObject e){if(loaded)evaluateJavascript("window.App&&window.App.receive("+e+")",null);}
-    void dispose(){repo.remove(this);removeJavascriptInterface("Native");stopLoading();destroy();}
+    @Override public void onEvent(JSONObject e){if(loaded&&!disposed)evaluateJavascript("window.App&&window.App.receive("+e+")",null);}
+    void dispose(){if(disposed)return;disposed=true;loaded=false;repo.remove(this);if(getParent() instanceof android.view.ViewGroup)((android.view.ViewGroup)getParent()).removeView(this);try{if(!rendererGone){removeJavascriptInterface("Native");stopLoading();}destroy();}catch(RuntimeException ignored){}}
 }
