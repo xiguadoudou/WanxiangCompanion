@@ -1,12 +1,12 @@
 {
   "packageName": "com.doudou.wxq",
-  "versionCode": 7,
-  "versionName": "0.1.6",
-  "apkUrl": "https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.6/WanxiangCompanion-0.1.6.apk",
+  "versionCode": 8,
+  "versionName": "0.1.7",
+  "apkUrl": "https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.7/WanxiangCompanion-0.1.7.apk",
   "apkFallbackUrls": [
-    "https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.6.apk"
+    "https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.7.apk"
   ],
-  "sha256": "462f0d25362f76492156a99ffaff5ccb760c6e679088c53199896b2968c5b887",
-  "sizeBytes": 78892,
-  "notes": "1. 打开软件自动检查 GitHub 新版本，有更新时弹窗展示版本号和更新内容。\n2. 支持立即下载、稍后再说；下载进度与安装入口可在弹窗内完成。\n3. 同次启动不重复提示相同版本，手动检查可重新查看。\n4. 已下载且校验通过的同版本安装包，在再次检查后仍可继续安装。"
+  "sha256": "18ea72dc9ef1c247df5aefa4ec1f3156bab1f0be027fcd309c9b89b331857b7a",
+  "sizeBytes": 87454,
+  "notes": "1. 首页五个禁用阵营改为网站对应原图，并内置图片以便离线显示。\n2. 打开或返回软件时检查资料、刷新当前条件的阵容，常规新增组合自动参与推荐。\n3. 阵营列表随网站英雄资料更新；新资料到达时按新版本重新匹配，避免沿用旧资料查询。\n4. 推荐仍按棋手、禁用、样本量和排序获取；接口或玩法结构变化可能需要升级软件。"
 }

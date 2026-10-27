@@ -1,8 +1,14 @@
 # 万象弈伴 · GitHub 更新
 
-Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.6**，包名 `com.doudou.wxq`，版本号 7。
+Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.7**，包名 `com.doudou.wxq`，版本号 8。
 
-[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.6.apk)
+[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.7.apk)
+
+## 阵容数据同步与阵营图标
+
+打开或返回软件时检查资料并刷新当前条件的推荐，网站新增的普通阵容组合无需重新安装 App，按棋手、禁用、样本量和排序自动参与查询。新增英雄资料和阵营列表也随网站资料读取；接口或玩法结构变化时可能需要客户端升级。
+
+首页的河洛、逐鹿、日落海、三分之地、大河流域按钮使用数据网站对应的原始图标，内置五张图片，离线也可显示。阵容推荐需要数据源正常可用；失败时保留对应条件的缓存并显示错误。候选有分页/数量限制，详情以实际数据范围为准。
 
 ## 启动更新弹窗
 
