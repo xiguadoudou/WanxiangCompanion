@@ -120,6 +120,7 @@ public final class OverlayService extends Service {
   if(callback!=null){Bundle data=new Bundle();data.putString("message",ok?"悬浮图标已启用":initError);callback.send(ok?1:0,data);}else if(!ok)Toast.makeText(this,initError,Toast.LENGTH_LONG).show();if(!ok)stopSelf();return START_NOT_STICKY;
  }
  @Override public void onConfigurationChanged(Configuration c){super.onConfigurationChanged(c);resizing=false;reconcile(true);}
- @Override public void onDestroy(){destroyed=true;handler.removeCallbacksAndMessages(null);if(session!=null)session.close();if(web!=null){web.dispose();web=null;}instance=null;super.onDestroy();}
+ void shutdown(){destroyed=true;handler.removeCallbacksAndMessages(null);if(session!=null)session.close();if(web!=null){web.dispose();web=null;}stopForeground(STOP_FOREGROUND_REMOVE);instance=null;}
+ @Override public void onDestroy(){shutdown();super.onDestroy();}
  @Override public IBinder onBind(Intent i){return null;}
 }

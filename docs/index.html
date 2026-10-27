@@ -7,7 +7,7 @@
   <meta name="description" content="万象弈伴 Android 下载。游戏内悬浮查看阵容、英雄装备，支持阵容码复制与软件内更新。">
   <title>万象弈伴 · Android 下载</title>
   <link rel="icon" type="image/svg+xml" href="icon.svg">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=12">
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -23,16 +23,18 @@
         <p class="intro">把阵容参考留在游戏里。<br>选棋手、点禁用，推荐随手可看。</p>
         <div class="release-line"><span class="dot" aria-hidden="true"></span><span id="version">最新稳定版</span><span class="separator">/</span> Android 8.0+</div>
         <div class="download-actions">
-          <a class="button primary" id="download" href="https://github.com/xiguadoudou/WanxiangCompanion/releases/latest/download/WanxiangCompanion.apk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg><span id="downloadText">下载最新安装包</span></a>
-          <a class="button secondary" id="backup" href="https://github.com/xiguadoudou/WanxiangCompanion/releases/latest" target="_blank" rel="noopener">查看 GitHub 版本 <span aria-hidden="true">↗</span></a>
+          <a class="button primary" id="download" href="https://ghfast.top/https://github.com/xiguadoudou/WanxiangCompanion/releases/latest/download/WanxiangCompanion.apk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg><span id="downloadText">加速下载最新安装包</span></a>
+          <a class="button secondary" id="backup" href="https://github.com/xiguadoudou/WanxiangCompanion/releases/latest/download/WanxiangCompanion.apk" target="_blank" rel="noopener">GitHub 官方直连 <span aria-hidden="true">↗</span></a>
         </div>
         <p class="download-note" id="downloadNote" role="status">正在读取最新版本与更新内容…</p>
-        <noscript><p class="download-note">点击下载可直接获取最新安装包；更新内容请查看 GitHub 版本页。</p></noscript>
+        <div class="download-links"><a id="rawBackup" href="https://ghfast.top/https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.12.apk">加速备用下载 ↗</a><a id="sourceLink" href="https://ghfast.top/https://github.com/xiguadoudou/WanxiangCompanion/releases/latest/download/WanxiangCompanion-source.zip">下载对应源码 ↗</a></div>
+        <p class="route-note">加速服务由 GHFast 提供。加速不可用时，可切换官方直连；无需配置手机代理。</p>
+        <noscript><p class="download-note">加速与官方按钮均可直接下载安装包；更新内容请查看 GitHub 版本页。</p></noscript>
       </div>
       <div class="showcase">
         <div class="game-field" aria-hidden="true"><div class="board"><i></i><i></i><i></i><i></i><i></i></div></div>
         <div class="mini-window" aria-label="悬浮窗排版示意，不是实时推荐">
-          <div class="mini-head"><img src="icon.svg" width="30" height="30" alt=""><span class="mini-player">常小娥 <small>⌄</small></span><span class="mini-faction">河洛</span><span class="mini-faction banned">逐鹿</span><span class="mini-reset">新局</span></div>
+          <div class="mini-head"><img src="icon.svg" width="30" height="30" alt=""><span class="mini-player">常小娥 <small>⌄</small></span><span class="mini-faction">河洛</span><span class="mini-faction banned">逐鹿</span><span class="mini-reset">菜单</span></div>
           <div class="mini-toolbar"><span><i class="dot"></i> 阵容参考</span><span>均名 <b>前三</b> 登顶</span></div>
           <div class="mini-main"><div class="mini-list"><div class="mini-selected">推荐阵容 A<small>点击切换阵容</small></div><div>推荐阵容 B<small>按本局条件匹配</small></div><div>推荐阵容 C<small>支持多选禁用</small></div></div><div class="mini-detail"><div class="mini-title">阵容与英雄装备 <span>复制</span></div><div class="mini-stats">表现指标 <strong>一眼可见</strong></div><div class="mini-roster"><span>核<small>核心</small></span><span>弈<small>英雄</small></span><span>弈<small>英雄</small></span><span>弈<small>英雄</small></span></div><div class="mini-items">装备 <span>装备一</span><span>装备二</span></div><div class="mini-scroll">向下滑动 · 查看全队装备</div></div></div>
           <div class="resize-handle" aria-hidden="true"></div>
@@ -41,7 +43,7 @@
       </div>
     </section>
     <section class="features" aria-label="主要功能">
-      <div><span class="feature-index">01</span><h2>留在游戏里</h2><p>点击图标展开或收起，回到主程序自动隐藏。</p></div>
+      <div><span class="feature-index">01</span><h2>留在游戏里</h2><p>点击图标展开或收起；菜单可返回软件或退出，主程序内自动隐藏。</p></div>
       <div><span class="feature-index">02</span><h2>按窗口重新排版</h2><p>拖动右下角调大小，小窗也能下滑看完整装备。</p></div>
       <div><span class="feature-index">03</span><h2>数据与软件各自更新</h2><p>打开检查资料，新版本展示更新内容并支持下载。</p></div>
     </section>
@@ -51,6 +53,6 @@
     </section>
   </main>
   <footer class="wrap footer"><span>软件由 ChatGPT 构建</span><span>数据来源 <a href="https://www.datawxq.com/" target="_blank" rel="noopener">万象棋大数据 ↗</a></span></footer>
-  <script src="download.js" defer></script>
+  <script src="download.js?v=12" defer></script>
 </body>
 </html>

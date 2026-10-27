@@ -11,7 +11,7 @@
  function save(){cmd('save',ui);}
  function toast(s){$('toast').textContent=s;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,2200);}
  function setStatus(text,mode=''){lastStatus=text;$('statusText').textContent=text;$('status').className='status '+mode;$('status').title=text;}
- function closeMenus(){for(const id of ['commanderMenu','heroMenu','appearance','message'])$(id).hidden=true;$('commanderTrigger').setAttribute('aria-expanded','false');$('appearanceTrigger').setAttribute('aria-expanded','false');}
+ function closeMenus(){for(const id of ['commanderMenu','heroMenu','appearance','message','exitConfirm'])$(id).hidden=true;$('commanderTrigger').setAttribute('aria-expanded','false');$('appearanceTrigger').setAttribute('aria-expanded','false');}
  function showMessage(title,text){closeMenus();$('messageTitle').textContent=title;$('messageText').textContent=text;$('message').hidden=false;}
  function renderFilters(){
   $('bans').innerHTML=L.FACTIONS.map(f=>`<button class="ban" data-ban="${esc(f)}" aria-pressed="${ui.bans.includes(f)}" aria-label="${esc(f)}，${ui.bans.includes(f)?'已禁用':'点击禁用'}">${esc(f)}</button>`).join('');
@@ -64,10 +64,14 @@
   case 'queryError':if(e.queryKey!==L.queryKey(query()))return;setStatus(e.message,'error');if(!data||data.queryKey!==e.queryKey){$('candidates').innerHTML='<div class="empty-list">查询未完成</div>';$('detail').innerHTML='<div class="empty"><b>连接暂不可用</b>点击右上角刷新重试</div>';}break;
   case 'bootError':setStatus(e.message,'error');if(!data&&ui.commanderId){$('candidates').innerHTML='<div class="empty-list">离线</div>';$('detail').innerHTML='<div class="empty">连接失败，点击刷新重试</div>';}break;
   case 'copyResult':toast(e.message||(e.ok?'阵容码已复制':'复制失败'));break;
- }},back(){if(['commanderMenu','heroMenu','appearance','message'].some(id=>!$(id).hidden))closeMenus();else cmd('minimize');}};
+ }},back(){if(['commanderMenu','heroMenu','appearance','message','exitConfirm'].some(id=>!$(id).hidden))closeMenus();else cmd('minimize');}};
  $('commanderTrigger').onclick=()=>{const opening=$('commanderMenu').hidden;closeMenus();$('commanderMenu').hidden=!opening;$('commanderTrigger').setAttribute('aria-expanded',String(opening));};
  $('appearanceTrigger').onclick=()=>{const opening=$('appearance').hidden;closeMenus();$('appearance').hidden=!opening;$('appearanceTrigger').setAttribute('aria-expanded',String(opening));};
  $('closeAppearance').onclick=$('closeMessage').onclick=closeMenus;
+ $('openApp').onclick=()=>{closeMenus();cmd('openApp');};
+ $('exitApp').onclick=()=>{closeMenus();$('exitConfirm').hidden=false;};
+ $('cancelExit').onclick=closeMenus;
+ $('confirmExit').onclick=()=>{closeMenus();cmd('exitApp');};
  $('status').onclick=()=>{const r=rows.find(r=>r.key===selectedKey);showMessage('同步状态',lastStatus+(r?'。'+r.size+' 人，组合 '+r.count+' 场，当前变阵 '+(r.rosterCount??'未知')+' 场。指标可能包含其他变阵。':'')+(data?.limited?' 候选尚未全部检索。':''));};
  $('scope').onclick=()=>showMessage('多选排除模式','已排除含所选阵营的阵容。指标来自该棋手全部禁用环境，不是多阵营同时禁用的统计。');
  $('nextRound').onclick=newRound;$('refresh').onclick=()=>{closeMenus();setStatus('检查更新中…','loading');cmd('refresh');if(ui.commanderId)request();};

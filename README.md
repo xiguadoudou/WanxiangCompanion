@@ -1,10 +1,16 @@
 # 万象弈伴 · GitHub 更新
 
-Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.11**，包名 `com.doudou.wxq`，版本号 12。
+Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.12**，包名 `com.doudou.wxq`，版本号 13。
 
-[查看 Android 源码](android/) · [下载当前源码包](https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.11/WanxiangCompanion-0.1.11-source.zip)
+[查看 Android 源码](android/) · [下载当前源码包](https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.12/WanxiangCompanion-0.1.12-source.zip)
 
-[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.11.apk)
+[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.12.apk)
+
+## 0.1.12 悬浮窗操作与下载页加速
+
+悬浮窗工具栏的“菜单”内有“返回软件”和“退出软件”：返回主程序时隐藏悬浮内容，退出先确认，再关闭所有软件页面、悬浮窗和常驻通知并结束后台任务；已有数据、图片缓存和安装包不会被清空。按钮在最小 250×170 dp 窗口中仍可直接点击；外观调整位于其下方，可滚动查看。
+
+下载页主按钮默认通过 GHFast 加速，附带官方直连、加速备用 APK 与对应版本源码下载。网页本身仍由 GitHub Pages 托管；版本资料优先取同站 `latest.json`，失败依次尝试加速 Raw、GitHub Releases API 与官方 Raw。公开加速服务不保证所有网络长期可达，页面始终保留官方入口。
 
 ## 0.1.11 GitHub 更新加速
 
@@ -32,7 +38,7 @@ Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.11**，�
 
 GitHub 完成首次构建后，可访问 **https://xiguadoudou.github.io/WanxiangCompanion/**。
 
-网页每次加载优先读取本仓库已发布的最新 Releases，失败时读取 `updates/latest.json`，显示版本号、更新内容、主下载与备用下载。资料加载失败或禁用 JavaScript 时，下载入口仍指向 Releases 最新版本的固定名 `WanxiangCompanion.apk`。0.1.9 起发布脚本同时上传固定名与版本名 APK，两者内容一致。网页没有账户、无统计脚本，也不保存用户选择。
+网页每次加载优先读取同站 `latest.json`，失败后尝试加速版本资料、已发布 Releases 和官方 Raw，显示版本号、更新内容、加速主下载与官方直连。资料加载失败或禁用 JavaScript 时，下载入口仍指向 Releases 最新版本的固定名 `WanxiangCompanion.apk`。0.1.9 起发布脚本同时上传固定名与版本名 APK，两者内容一致。网页没有账户、无统计脚本，也不保存用户选择。
 
 本仓库连接不包含 Pages 管理权限，首次开关需要仓库所有者设置一次。后续不需要重复开关；发布新 Releases 后，页面读取新版本即可更新，不必逐次修改 HTML。
 

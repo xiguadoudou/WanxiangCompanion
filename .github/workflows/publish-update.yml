@@ -24,6 +24,8 @@ jobs:
           persist-credentials: false
       - name: Check APK/source publication rules
         run: python3 -m unittest discover -s tests -p 'test_source_release.py' -v
+      - name: Check download page acceleration and fallback
+        run: node tests/download.test.cjs
       - name: Check overlay recovery and persistent image cache
         run: |
           mkdir -p "$RUNNER_TEMP/wxq-native"
