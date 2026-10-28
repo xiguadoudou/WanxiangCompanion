@@ -1,10 +1,16 @@
 # 万象弈伴 · GitHub 更新
 
-Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.17**，包名 `com.doudou.wxq`，版本号 18。
+Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.18**，包名 `com.doudou.wxq`，版本号 19。
 
-[查看 Android 源码](android/) · [下载当前源码包](https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.17/WanxiangCompanion-0.1.17-source.zip)
+[查看 Android 源码](android/) · [下载当前源码包](https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.18/WanxiangCompanion-0.1.18-source.zip)
 
-[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.17.apk)
+[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.18.apk)
+
+## 0.1.18 模块风格与导航修复
+
+阵容模拟、万象资料库统一使用首页的薄荷绿、深色渐变、磨砂卡片、圆角筛选和搜索框；原生工具栏沿用万象弈伴标识，并补齐模块标题、说明与构建署名。移除两套原站外壳的顶部、底部和“更多”导航，取消原导航预留空白。
+
+模块只能由软件侧边栏切换。Vue 路由守卫、链接和 History 限制与 Android 模块归属校验共同阻止站内跳往首页、排行、账号和其他原站页面，保留阵容方案及资料筛选所需的查询参数。离线检查覆盖 320/390/844 像素宽度下的导航隐藏、路由隔离、摆阵、穿戴装备、图片导出和资料库分类；保留原签名覆盖更新及匹配源码附件。
 
 ## 0.1.17 本地移植工作室
 

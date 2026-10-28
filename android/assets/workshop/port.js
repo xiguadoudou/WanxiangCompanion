@@ -1,7 +1,23 @@
 // Authorized UI/components run locally. Server-only actions are replaced by app-owned plans.
-(()=>{'use strict';try{if(!localStorage.getItem('wxq-theme-mode'))localStorage.setItem('wxq-theme-mode','dark');}catch(e){}
-const hideServerControls=()=>document.querySelectorAll('#simulator-settings .setting-btn,#simulator-settings .map-btn').forEach(el=>{if(/分享阵容|制作一图流|保存阵容图|保存横向图/.test((el.textContent||'').trim()))el.classList.add('wxq-port-hidden');});
-new MutationObserver(hideServerControls).observe(document.getElementById('app'),{childList:true,subtree:true});
+(()=>{'use strict';try{localStorage.setItem('wxq-theme-mode','dark');}catch(e){}
+const database=location.pathname==='/h5/database',modulePaths=database?['/h5/database']:['/team-builder','/simulator'];
+function ownsUrl(value){try{const u=new URL(value,location.href);return u.origin===location.origin&&modulePaths.includes(u.pathname);}catch(e){return false;}}
+let toastTimer;function navigationNote(){let t=document.getElementById('wxq-port-toast');if(!t){t=document.createElement('div');t.id='wxq-port-toast';t.className='wxq-port-toast';t.setAttribute('role','status');document.body.appendChild(t);}t.textContent='请从左上角侧边栏切换软件功能';t.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>{t.hidden=true;},2500);}
+// Vue navigation does not cause a WebView page request. Guard its router as well
+// as links/history, while preserving query updates for plans and library filters.
+for(const method of ['pushState','replaceState']){const original=history[method];history[method]=function(state,title,url){if(url!=null&&!ownsUrl(url)){navigationNote();throw new DOMException('Use the app sidebar to change modules','SecurityError');}return original.apply(this,arguments);};}
+document.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('a[href]');if(a&&!ownsUrl(a.href)){e.preventDefault();e.stopImmediatePropagation();navigationNote();}},true);
+window.open=()=>{navigationNote();return null;};
+const shellNavigation='.ep-header,.ep-bottom-nav,.ep-mobile-more,.ep-mobile-more__backdrop,.h5-header,.h5-bottom-nav,.h5-tabbar,.site-footer,.ep-footer,.app-footer';
+let guardedRouter;
+function integrate(){
+ document.querySelectorAll(shellNavigation).forEach(el=>{el.hidden=true;el.setAttribute('inert','');el.setAttribute('aria-hidden','true');});
+ document.querySelectorAll('#simulator-settings .setting-btn,#simulator-settings .map-btn').forEach(el=>{if(/分享阵容|制作一图流|保存阵容图|保存横向图/.test((el.textContent||'').trim())){el.classList.add('wxq-port-hidden');el.setAttribute('inert','');}});
+ document.querySelectorAll('.setting-left-line').forEach(el=>{if(el.children.length&&[...el.children].every(c=>c.classList.contains('wxq-port-hidden')))el.classList.add('wxq-port-hidden');});
+ const main=document.querySelector(database?'.h5-main':'.simulator-view');if(main&&!main.querySelector('.wxq-workshop-intro')){const intro=document.createElement('section');intro.className='wxq-workshop-intro';intro.innerHTML=database?'<small>WANXIANG · LIBRARY</small><h1>万象资料，<em>随手可查。</em></h1><p>英雄、装备与天赋，按需查阅，离线也清晰。</p>':'<small>WANXIANG · YOUR LINEUP</small><h1>落子之前，<em>先有章法。</em></h1><p>搭配英雄与装备，把这一局的思路摆出来。</p>';main.insertBefore(intro,main.firstChild);const credit=document.createElement('div');credit.className='wxq-workshop-credit';credit.textContent='软件由 ChatGPT 构建';main.appendChild(credit);}
+ const router=document.getElementById('app').__vue_app__?.config.globalProperties.$router;if(router&&router!==guardedRouter){guardedRouter=router;router.beforeEach(to=>{if(ownsUrl(to.fullPath))return true;navigationNote();return false;});}
+}
+new MutationObserver(integrate).observe(document.getElementById('app'),{childList:true,subtree:true});integrate();
 document.addEventListener('error',e=>{const img=e.target;if(img.tagName!=='IMG')return;e.stopImmediatePropagation();if(img.dataset.wxqFallback)return;img.dataset.wxqFallback='1';const label=(img.alt||'弈').slice(0,2).replace(/[<>&"']/g,'');img.src='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="72" height="72"><rect width="72" height="72" rx="12" fill="#253c43"/><text x="36" y="44" text-anchor="middle" font-size="24" fill="#b7d4c8">'+label+'</text></svg>');},true);
 const pictures=new Map();function image(url){if(!url)return Promise.resolve(null);if(!pictures.has(url))pictures.set(url,new Promise(resolve=>{const i=new Image();i.crossOrigin='anonymous';i.onload=()=>resolve(i);i.onerror=()=>resolve(null);i.src=url;}));return pictures.get(url);}
 async function exportImage(horizontal=false,transparent=false){

@@ -7,6 +7,12 @@
 - `res/`、`AndroidManifest.xml`：安卓资源、组件和权限。
 - `tests/`：保留的原生与界面回归检查，`fixtures/` 为历史公开数据响应测试资料，产品不使用这些测试响应代替在线推荐。
 
+## 0.1.18 外观和路由统一
+
+`port.css` 将两套原站组件主题映射到首页的薄荷绿与磨砂卡片，并移除两套外壳导航和底部占位。`WorkshopView` 工具栏统一标识、间距、圆角工具按钮；标题说明随当前模块显示。`port.js` 在 Vue 挂载后注册当前模块路由守卫，对网站外壳设置 hidden/inert，并限制跨模块链接、History 和新窗口；`SiteModules.owns` 在 Android 导航与草稿存储中校验模块归属，切换功能只经过原生侧边栏。
+
+离线 UI 回归增加实际 Vue router.push、链接与 History 越界尝试，验证 320/390/844 像素下导航不可见且不可聚焦、查询参数更新和原交互仍正常。
+
 ## 0.1.17 本地模块
 
 `WorkshopView` 替换并移除了在线 `SiteModuleView`。`LocalWorkshop` 校验并读取 APK 中的授权移植组件 ZIP，仅在虚拟 app-asset 原点提供本地 HTML/JS/CSS/JSON；CSP 禁止远程脚本及账号 API。基础图片从包内读取，其他图片复用现有磁盘缓存。原站组件数据字面量已剥离到 `library-data.json`，`WorkshopData` 在已有更新链路中解析字面记录并原子保存，原站脚本不会在模块中执行。

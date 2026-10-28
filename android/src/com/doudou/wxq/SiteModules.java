@@ -8,4 +8,5 @@ final class SiteModules {
  static String title(String id){if(SIMULATOR.equals(id))return "阵容模拟";if(DATABASE.equals(id))return "万象资料库";return "阵容推荐";}
  static String url(String id){if(SIMULATOR.equals(id))return "https://appassets.androidplatform.net/team-builder";if(DATABASE.equals(id))return "https://appassets.androidplatform.net/h5/database";throw new IllegalArgumentException("Unknown online module");}
  static boolean allowed(String raw){try{URI u=new URI(raw);return "https".equalsIgnoreCase(u.getScheme())&&HOST.equalsIgnoreCase(u.getHost())&&u.getUserInfo()==null&&(u.getPort()==-1||u.getPort()==443)&&java.util.Arrays.asList("/team-builder","/simulator","/h5/database").contains(u.getPath());}catch(Exception e){return false;}}
+ static boolean owns(String module,String raw){if(!allowed(raw))return false;try{String path=new URI(raw).getPath();return SIMULATOR.equals(module)?("/team-builder".equals(path)||"/simulator".equals(path)):DATABASE.equals(module)&&"/h5/database".equals(path);}catch(Exception e){return false;}}
 }
