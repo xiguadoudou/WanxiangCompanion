@@ -6,7 +6,7 @@
  const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const src=url=>/^https:\/\//.test(url||'')?esc(url):fallbackAvatar;
  const cmd=(action,data={})=>{if(window.Native)Native.command(JSON.stringify({action,data}));};
- let catalog={commanders:[]}, data=null, ui={commanderId:'',bans:[],sort:'avgPlacement',days:7,minCount:10,opacity:88,width:392,height:230},overlay=false,settings=false,queued=null,queryTimer=null,booted=false,busy=false;
+ let catalog={commanders:[]}, data=null, ui={commanderId:'',bans:[],sort:'avgPlacement',days:7,minCount:10,opacity:50,width:392,height:230},overlay=false,settings=false,queued=null,queryTimer=null,booted=false,busy=false;
  function query(){const c=(catalog.commanders||[]).find(c=>String(c.id)===String(ui.commanderId));return {commanderId:ui.commanderId,commanderName:c?.name||'',bans:L.cleanBans(ui.bans),sort:ui.sort,days:ui.days,minCount:ui.minCount};}
  function save(){cmd('save',ui);}
  function request(){if(!ui.commanderId)return;clearTimeout(queryTimer);queryTimer=setTimeout(()=>{busy=true;status('正在匹配本局条件…','loading');if(!data||data.queryKey!==L.queryKey(query()))$('results').innerHTML='<div class="skeleton"></div><div class="skeleton"></div>';cmd('query',query());},380);}

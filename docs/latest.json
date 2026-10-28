@@ -1,12 +1,12 @@
 {
   "packageName": "com.doudou.wxq",
-  "versionCode": 15,
-  "versionName": "0.1.14",
-  "apkUrl": "https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.14/WanxiangCompanion-0.1.14.apk",
+  "versionCode": 16,
+  "versionName": "0.1.15",
+  "apkUrl": "https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.15/WanxiangCompanion-0.1.15.apk",
   "apkFallbackUrls": [
-    "https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.14.apk"
+    "https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.15.apk"
   ],
-  "sha256": "f1e5ad699186fa3e2fa4d15db403a19cbb585966ca90936acc8a7fc5e953c667",
-  "sizeBytes": 103911,
-  "notes": "1. 新增长条模式：选好阵容点击详情标题旁“长条”，只显示这套阵容的英雄和各自装备，隐藏其他内容。\n2. 横向排列，窗口窄时左右滑动查看；修正装备区域对横向手势的限制，英雄区和装备区都可开始滑动。\n3. 固定当前阵容快照，后台刷新不会替换；拖动左侧小图标移动长条，点击恢复完整面板。\n4. 右下角可调整长条宽度，独立保留完整面板的大小；新一局或返回主程序时退出长条模式。\n5. 保留图片缓存、透明度、GitHub 加速下载与原签名覆盖安装，对应源码同步发布。"
+  "sha256": "13ee4901390c071b4e0301833efac50dd52318016d765d248935eb815dafabde",
+  "sizeBytes": 108079,
+  "notes": "1. 默认背景不透明度改为 50%，旧版默认 88% 一次迁移为 50%，保留其他自定义数值。\n2. “长条”改名为“简易”，角色列缩小并收紧间距，装备图标与名称作为整体在角色下方居中。\n3. 简易模式新增加锁按钮，锁定后面板点击透传至游戏，不能拖动或误操作；旁边独立的小锁按钮可解锁。\n4. 锁定适配安卓较新版本的窗口透明度要求，解锁按钮无法显示时取消锁定；回主程序或关闭服务会清理锁定状态。\n5. 竖屏的悬浮图标、面板和解锁按钮避开状态栏与导航区域，旋转后自动重新校正位置；横屏仍可贴左边。\n6. 保留图片缓存、GitHub 加速更新和原签名覆盖安装，源码同步发布。"
 }

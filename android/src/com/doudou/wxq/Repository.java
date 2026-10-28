@@ -21,6 +21,7 @@ final class Repository {
   app=c;images=new ImageDiskCache(new File(c.getFilesDir(),"image-cache"));prefs=c.getSharedPreferences("wxq_companion_v1",Context.MODE_PRIVATE);
   JSONObject ui=json(prefs.getString("ui","{}"));if(ui.optInt("compactOverlayVersion")<3){put(ui,"width",392);put(ui,"height",230);put(ui,"compactOverlayVersion",3);prefs.edit().putString("ui",ui.toString()).apply();}
   if(ui.optInt("minimumDefaultRevision")<1){if(!ui.has("minCount")||ui.optInt("minCount")==50)put(ui,"minCount",10);put(ui,"minimumDefaultRevision",1);prefs.edit().putString("ui",ui.toString()).apply();}
+  OverlayAppearance.migrate(ui);prefs.edit().putString("ui",ui.toString()).apply();
   catalog=json(prefs.getString("catalog","{}"));if(!valid(catalog))try{catalog=json(asset("catalog-snapshot.json"));}catch(Exception e){catalog=new JSONObject();}
   result=json(prefs.getString("last_result","{}"));
   String did=prefs.getString("data_device_id","");if(!did.startsWith("did")||did.length()!=26){did="did"+UUID.randomUUID().toString().replace("-","").substring(0,23);prefs.edit().putString("data_device_id",did).apply();}

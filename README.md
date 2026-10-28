@@ -1,10 +1,18 @@
 # 万象弈伴 · GitHub 更新
 
-Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.14**，包名 `com.doudou.wxq`，版本号 15。
+Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.15**，包名 `com.doudou.wxq`，版本号 16。
 
-[查看 Android 源码](android/) · [下载当前源码包](https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.14/WanxiangCompanion-0.1.14-source.zip)
+[查看 Android 源码](android/) · [下载当前源码包](https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.15/WanxiangCompanion-0.1.15-source.zip)
 
-[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.14.apk)
+[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.15.apk)
+
+## 0.1.15 简易模式与锁定透传
+
+默认背景不透明度 50%，旧版 88% 默认值一次迁移，其他自定义值保留。原“长条”入口更名“简易”，约 86 dp 高、每列 64 dp，装备图标和名称整体居中，列间不随窗口拉大而扩散。
+
+简易面板右侧小锁启用点击透传，锁定时不能点选、滑动或拖动面板，旁边保留独立解锁小按钮；解锁按钮先显示成功才会启用透传，异常时回退可操作状态。安卓 12+ 按系统限制设置窗口 alpha，补偿背景 alpha，保持 50% 默认背景尽可能一致。高于系统透传阈值的自定义不透明度在锁定时受系统阈值限制，解锁恢复原设置。回主程序、新局或关闭服务会清理锁定。
+
+竖屏图标、完整/简易面板与解锁按钮避开状态栏和导航区域，拖动、启动和旋转均重新校正；横屏保留左右贴边。已验证状态与透明度策略、144 种安全位置、布局对齐与触摸回归，并沿用原签名构建；具体手机的系统窗口交互仍以实机表现为准。
 
 ## 0.1.14 长条触摸滑动
 

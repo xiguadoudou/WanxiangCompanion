@@ -7,6 +7,14 @@
 - `res/`、`AndroidManifest.xml`：安卓资源、组件和权限。
 - `tests/`：保留的原生与界面回归检查，`fixtures/` 为历史公开数据响应测试资料，产品不使用这些测试响应代替在线推荐。
 
+## 0.1.15 简易与点击透传
+
+`OverlayAppearance` 将空值/旧默认 88% 一次迁移为 50%，保留自定义及以后手动选择。简易卡片固定 64 dp 宽、约 86 dp 高，装备组整体居中；新版独立宽度偏好不沿用旧版拉宽值。
+
+右侧锁定按钮经 Native 设置 `FLAG_NOT_TOUCHABLE`，独立解锁窗口放在面板外。先成功挂载解锁按钮，再使主窗口不接收触摸；挂载失败则取消锁定。Android 12+ 查询 `InputManager.getMaximumObscuringOpacityForTouch()`，将主窗口 alpha 限制在系统阈值以内，背景 alpha 反向补偿，解除锁定恢复正常。解锁窗口仅占 28 dp 方形，关闭/回主程序/显示失败会清理。
+
+竖屏读取状态栏、导航条和刘海 Insets，启动、拖动、尺寸变化与旋转都限制垂直安全范围；横屏不引入左右边距。`OverlayTouchTest` 验证锁定状态、alpha 策略、默认迁移及安全位置，`lineup-strip.test.cjs` 检查默认 50%、简易命名、固定列宽、装备组居中、锁定桥接与触摸滑动。
+
 ## 0.1.14 触摸滑动修复
 
 装备列允许横向手势交给整条容器，保持纵向装备列表自己的边界控制。补充移动端真实 touchStart/touchMove/touchEnd 回归，检查从英雄区和装备区开始均能横向滚动。

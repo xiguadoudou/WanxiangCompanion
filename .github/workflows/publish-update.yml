@@ -29,7 +29,7 @@ jobs:
       - name: Check overlay recovery and persistent image cache
         run: |
           mkdir -p "$RUNNER_TEMP/wxq-native"
-          java -m jdk.compiler/com.sun.tools.javac.Main --release 8 -encoding UTF-8 -d "$RUNNER_TEMP/wxq-native" android/src/com/doudou/wxq/{BuildInfo,OverlayState,OverlayGeometry,DragTapTracker,OverlayWindowSession,OverlayStartGate,ImageDiskCache}.java android/tests/{OverlayModelTest,OverlayReliabilityTest,ImageDiskCacheTest}.java
+          java -m jdk.compiler/com.sun.tools.javac.Main --release 8 -encoding UTF-8 -d "$RUNNER_TEMP/wxq-native" android/src/com/doudou/wxq/{BuildInfo,OverlayState,OverlayGeometry,DragTapTracker,OverlayWindowSession,OverlayStartGate,OverlayTouchPolicy,ImageDiskCache}.java android/tests/{OverlayModelTest,OverlayReliabilityTest,ImageDiskCacheTest}.java
           java -cp "$RUNNER_TEMP/wxq-native" com.doudou.wxq.OverlayModelTest
           java -cp "$RUNNER_TEMP/wxq-native" com.doudou.wxq.OverlayReliabilityTest
           java -cp "$RUNNER_TEMP/wxq-native" com.doudou.wxq.ImageDiskCacheTest
@@ -45,6 +45,10 @@ jobs:
           java -m jdk.compiler/com.sun.tools.javac.Main --release 8 -encoding UTF-8 -cp "$RUNNER_TEMP/wxq-json.jar" -d "$RUNNER_TEMP/wxq-updates" android/src/com/doudou/wxq/{BuildInfo,UpdateContract,UpdateTransport,UpdateRoutes,UpdateCheck}.java android/tests/{UpdateRoutesTest,UpdateContractTest}.java
           java -cp "$RUNNER_TEMP/wxq-updates:$RUNNER_TEMP/wxq-json.jar" com.doudou.wxq.UpdateRoutesTest
           java -cp "$RUNNER_TEMP/wxq-updates:$RUNNER_TEMP/wxq-json.jar" com.doudou.wxq.UpdateContractTest
+      - name: Check simple lock, opacity defaults and portrait bounds
+        run: |
+          java -m jdk.compiler/com.sun.tools.javac.Main --release 8 -encoding UTF-8 -cp "$RUNNER_TEMP/wxq-json.jar" -d "$RUNNER_TEMP/wxq-native" android/src/com/doudou/wxq/{OverlayState,OverlayGeometry,OverlayTouchPolicy,OverlayAppearance}.java android/tests/OverlayTouchTest.java
+          java -cp "$RUNNER_TEMP/wxq-native:$RUNNER_TEMP/wxq-json.jar" com.doudou.wxq.OverlayTouchTest
       - name: Verify package and publish APK with source
         # Metadata fallback and canonical/proxy URL rules are also checked on the host JVM.
         env:
