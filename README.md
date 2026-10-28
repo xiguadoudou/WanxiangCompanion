@@ -1,10 +1,18 @@
 # 万象弈伴 · GitHub 更新
 
-Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.15**，包名 `com.doudou.wxq`，版本号 16。
+Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.16**，包名 `com.doudou.wxq`，版本号 17。
 
-[查看 Android 源码](android/) · [下载当前源码包](https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.15/WanxiangCompanion-0.1.15-source.zip)
+[查看 Android 源码](android/) · [下载当前源码包](https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.16/WanxiangCompanion-0.1.16-source.zip)
 
-[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.15.apk)
+[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.16.apk)
+
+## 0.1.16 功能侧边栏
+
+左上角 ☰ 打开原生侧边栏，提供阵容推荐、阵容模拟、万象资料库三个入口。模拟器在软件内加载 `https://www.datawxq.com/team-builder`，资料库采用手机入口 `https://www.datawxq.com/h5/database`，支持分类、搜索和详情；这两个模块需联网，页面功能随原站更新。模拟器横屏操作更方便。
+
+在线模块分别延迟创建，在同一次主程序存活期间切换会保留模拟棋盘、资料库搜索和滚动状态，不清空推荐选择。顶部提供侧边栏、刷新和返回推荐；返回键先关闭侧边栏或返回网页历史，再回推荐。网页图片共享现有磁盘缓存；网页本身按服务器规则使用 WebView 缓存，不承诺离线可用。
+
+在线 WebView 不暴露软件的 Native 控制接口，仅允许本数据站 HTTPS 主页面导航；网络、HTTP、HTTPS、超时与显示进程异常提供重试界面。当前以原站在线模块接入，未重写为本地离线模拟引擎；网页分享/导出等能力受原站与系统 WebView 支持范围影响。浏览内置模块仍属于软件内，悬浮窗自动隐藏。已验证原站添加英雄、资料库分类和搜索，以及侧边栏入口、路由隔离、200 次切换的页面复用和原签名构建。
 
 ## 0.1.15 简易模式与锁定透传
 

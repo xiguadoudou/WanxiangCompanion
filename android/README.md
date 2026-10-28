@@ -7,6 +7,14 @@
 - `res/`、`AndroidManifest.xml`：安卓资源、组件和权限。
 - `tests/`：保留的原生与界面回归检查，`fixtures/` 为历史公开数据响应测试资料，产品不使用这些测试响应代替在线推荐。
 
+## 0.1.16 侧边栏与在线模块
+
+`MainActivity` 内的原生侧边栏统一切换推荐、模拟、资料库，`ModuleTabs` 延迟创建并保留三个页面；切换不触发 Activity 前后台重建或重置推荐条件。原本 AppView 独立放入 mainPane，显示失败的重新加载不会移除其他模块。旋转保留页面并调整侧边栏大小。
+
+`SiteModuleView` 是独立 WebView，不使用 AppView、不添加 JavaScript Native 接口、不开放文件读取、内容 URI、混合内容和第三方 Cookie。顶层仅允许数据站 HTTPS 原点，图片读取共享 ImageDiskCache，页面缓存遵循网站 Cache-Control。加载进度、HTTP/网络/SSL/30 秒超时及 rendererGone 有原生重试入口。销毁 Activity 会清理所有模块 WebView；软件内浏览模块仍隐藏浮层。
+
+原站模拟 `/team-builder` 和手机资料库 `/h5/database` 作为在线模块提供，未复制或打包站点源码；原站更新自动生效。导出、分享等网站附属能力依赖系统 WebView 支持，离线功能不作承诺。`SiteModulesTest` 验证路由、原点隔离、200 次切换复用和失败创建；`navigation.test.cjs` 检查侧边栏桥接、推荐保留、设置入口与三种屏幕宽度。
+
 ## 0.1.15 简易与点击透传
 
 `OverlayAppearance` 将空值/旧默认 88% 一次迁移为 50%，保留自定义及以后手动选择。简易卡片固定 64 dp 宽、约 86 dp 高，装备组整体居中；新版独立宽度偏好不沿用旧版拉宽值。

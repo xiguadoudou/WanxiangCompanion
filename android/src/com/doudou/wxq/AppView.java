@@ -49,6 +49,7 @@ final class AppView extends WebView implements Repository.Listener {
         String action=c.optString("action");JSONObject data=c.optJSONObject("data");if(data==null)data=new JSONObject();
         switch(action){
             case "query":repo.query(data);break;
+            case "navigation":if(!overlay&&getContext() instanceof MainActivity)((MainActivity)getContext()).openNavigation();break;
             case "detail":repo.detail(data.optJSONObject("query"),data.optString("key"));break;
             case "save":repo.saveUi(data);break;
             case "resetRound":repo.resetRound();break;

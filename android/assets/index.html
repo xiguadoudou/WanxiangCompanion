@@ -23,11 +23,12 @@
 
 .bans{gap:5px}.ban{min-width:53px;flex-basis:53px}.faction-symbol{width:34px;height:34px;display:grid;place-items:center;margin:0 auto 7px}.faction-symbol img{display:block;width:32px;height:32px;object-fit:contain;filter:drop-shadow(0 2px 5px #d8c19225)}.ban[aria-pressed=true] .faction-symbol img{opacity:.55}.faction-fallback{font-size:18px;color:var(--gold)}
 .build-credit{color:#8ba4aa;font-size:10px;letter-spacing:.5px;margin:19px 0 0}
+.nav-trigger{padding:0;flex-shrink:0;font-size:20px}.wordmark{gap:9px}@media(max-width:359px){header .wordmark strong{font-size:16px;letter-spacing:1px}header .wordmark small{font-size:8px;letter-spacing:1px}header .header-tools{gap:4px}header .icon{width:32px;height:35px}header .mark{width:36px;height:36px}}
 </style>
 </head>
 <body>
 <main>
- <header><div class="wordmark"><div class="mark">◇</div><div><strong>万象弈伴</strong><small>YOUR NEXT MOVE</small></div></div><div class="header-tools"><button class="icon" id="refresh" aria-label="检查数据更新">↻</button><button class="icon" id="updateButton" aria-label="软件更新">↑</button><button class="icon" id="settingsButton" aria-label="调整外观">☷</button></div></header>
+ <header><div class="wordmark"><button class="mark nav-trigger" id="navigationButton" aria-label="打开功能侧边栏：阵容推荐、阵容模拟、万象资料库">☰</button><div><strong>万象弈伴</strong><small>YOUR NEXT MOVE</small></div></div><div class="header-tools"><button class="icon" id="refresh" aria-label="检查数据更新">↻</button><button class="icon" id="updateButton" aria-label="软件更新">↑</button><button class="icon" id="settingsButton" aria-label="调整外观">☷</button></div></header>
  <div id="recommendation">
   <section class="intro"><div class="eyebrow">A LITTLE CLARITY. A BETTER GAME.</div><h1>这一局，<em>有迹可循。</em></h1><p>选好棋手与禁用阵营，让真实对局数据给你一点灵感。</p></section>
   <section class="configuration glass">

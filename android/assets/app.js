@@ -132,6 +132,7 @@
  };
  $('commanderButton').onclick=()=>toggleDropdown(!$('commanders').classList.contains('open'));
  $('clearBans').onclick=()=>{ui.bans=[];renderBans();save();request();};
+ $('navigationButton').onclick=()=>cmd('navigation');
  $('settingsButton').onclick=()=>setSettings(!settings);$('back').onclick=()=>setSettings(false);
  for(const k of ['opacity','width','height'])$(k).oninput=()=>{ui[k]=+$(k).value;renderStyle();save();};
  document.querySelectorAll('[data-sort]').forEach(b=>b.onclick=()=>{ui.sort=b.dataset.sort;renderStyle();save();request();});

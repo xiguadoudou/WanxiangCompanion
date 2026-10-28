@@ -1,12 +1,12 @@
 {
   "packageName": "com.doudou.wxq",
-  "versionCode": 16,
-  "versionName": "0.1.15",
-  "apkUrl": "https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.15/WanxiangCompanion-0.1.15.apk",
+  "versionCode": 17,
+  "versionName": "0.1.16",
+  "apkUrl": "https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.16/WanxiangCompanion-0.1.16.apk",
   "apkFallbackUrls": [
-    "https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.15.apk"
+    "https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.16.apk"
   ],
-  "sha256": "13ee4901390c071b4e0301833efac50dd52318016d765d248935eb815dafabde",
-  "sizeBytes": 108079,
-  "notes": "1. 默认背景不透明度改为 50%，旧版默认 88% 一次迁移为 50%，保留其他自定义数值。\n2. “长条”改名为“简易”，角色列缩小并收紧间距，装备图标与名称作为整体在角色下方居中。\n3. 简易模式新增加锁按钮，锁定后面板点击透传至游戏，不能拖动或误操作；旁边独立的小锁按钮可解锁。\n4. 锁定适配安卓较新版本的窗口透明度要求，解锁按钮无法显示时取消锁定；回主程序或关闭服务会清理锁定状态。\n5. 竖屏的悬浮图标、面板和解锁按钮避开状态栏与导航区域，旋转后自动重新校正位置；横屏仍可贴左边。\n6. 保留图片缓存、GitHub 加速更新和原签名覆盖安装，源码同步发布。"
+  "sha256": "3b50978c729d5f85aeb4bfdd7f89421233bf444a01b05f58067d6f9cfdbf077a",
+  "sizeBytes": 112175,
+  "notes": "1. 主页面左上角新增功能侧边栏，可切换阵容推荐、阵容模拟、万象资料库。\n2. 阵容模拟以内置在线页面接入原站，可编排英雄、装备和站位，横屏操作更方便。\n3. 万象资料库接入原站手机版，支持英雄、棋手、装备、天赋、效果牌、初始卡包等分类和搜索。\n4. 切换模块保留当前页面状态，提供返回推荐、加载进度、重新加载和失败重试；两个新增模块需联网。\n5. 在线模块共享已有图片缓存，与本地软件控制接口隔离；软件内浏览模块时悬浮窗继续自动隐藏。\n6. 保留简易模式、锁定透传、50% 默认透明度、GitHub 加速更新及原签名覆盖安装，源码同步发布。"
 }

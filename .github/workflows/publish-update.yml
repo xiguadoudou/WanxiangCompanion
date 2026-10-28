@@ -49,6 +49,10 @@ jobs:
         run: |
           java -m jdk.compiler/com.sun.tools.javac.Main --release 8 -encoding UTF-8 -cp "$RUNNER_TEMP/wxq-json.jar" -d "$RUNNER_TEMP/wxq-native" android/src/com/doudou/wxq/{OverlayState,OverlayGeometry,OverlayTouchPolicy,OverlayAppearance}.java android/tests/OverlayTouchTest.java
           java -cp "$RUNNER_TEMP/wxq-native:$RUNNER_TEMP/wxq-json.jar" com.doudou.wxq.OverlayTouchTest
+      - name: Check native module routing and state retention
+        run: |
+          java -m jdk.compiler/com.sun.tools.javac.Main --release 8 -encoding UTF-8 -d "$RUNNER_TEMP/wxq-native" android/src/com/doudou/wxq/{SiteModules,ModuleTabs}.java android/tests/SiteModulesTest.java
+          java -cp "$RUNNER_TEMP/wxq-native" com.doudou.wxq.SiteModulesTest
       - name: Verify package and publish APK with source
         # Metadata fallback and canonical/proxy URL rules are also checked on the host JVM.
         env:

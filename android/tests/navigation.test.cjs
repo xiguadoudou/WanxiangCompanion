@@ -1,0 +1,8 @@
+const {chromium}=require(process.env.WXQ_PLAYWRIGHT_MODULE||'playwright');
+const fs=require('fs'),assert=require('node:assert/strict'),{pathToFileURL}=require('url');
+(async()=>{const b=await chromium.launch({executablePath:process.env.WXQ_BROWSER_PATH,args:['--no-sandbox']});try{
+ const p=await b.newPage();const errors=[];p.on('pageerror',e=>errors.push(e.message));await p.route('https://**/*',r=>r.abort());const f=JSON.parse(fs.readFileSync('tests/fixtures/copy-ui-fixture.json'));
+ await p.addInitScript(f=>{window.sent=[];window.Native={initialState:()=>JSON.stringify({type:'init',catalog:f.catalog,data:f.data,prefs:{...f.data.query}}),command:x=>sent.push(JSON.parse(x))};},f);
+ for(const [width,height] of [[320,720],[390,844],[800,390]]){await p.setViewportSize({width,height});await p.goto(pathToFileURL(process.cwd()+'/assets/index.html').href);await p.waitForSelector('.card');const before=await p.locator('#results').innerText();await p.locator('#navigationButton').click();assert.equal(await p.evaluate(()=>sent.at(-1).action),'navigation');assert.equal(await p.locator('#results').innerText(),before,'Opening drawer must not clear recommendations');assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Header must fit small and landscape windows');await p.locator('#settingsButton').click();assert.equal(await p.locator('#settings').isVisible(),true);}
+ assert.deepEqual(errors,[]);console.log('Native drawer action, recommendation preservation, existing settings and header fit at three sizes passed.');
+}finally{await b.close();}})().catch(e=>{console.error(e);process.exit(1)});
