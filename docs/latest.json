@@ -1,12 +1,12 @@
 {
   "packageName": "com.doudou.wxq",
-  "versionCode": 13,
-  "versionName": "0.1.12",
-  "apkUrl": "https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.12/WanxiangCompanion-0.1.12.apk",
+  "versionCode": 14,
+  "versionName": "0.1.13",
+  "apkUrl": "https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.13/WanxiangCompanion-0.1.13.apk",
   "apkFallbackUrls": [
-    "https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.12.apk"
+    "https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.13.apk"
   ],
-  "sha256": "028f291d369da7c61fbedbab2a1c0e8f893157613853a772f32dfa1fe98627d6",
-  "sizeBytes": 99742,
-  "notes": "1. 悬浮窗新增菜单，提供“返回软件”和“退出软件”按钮，小窗也能直接操作。\n2. 返回软件自动隐藏悬浮窗；确认退出后关闭悬浮窗、常驻通知及软件页面，停止后台任务，保留已缓存资料和图片。\n3. 下载页默认使用 GHFast 加速下载安装包和对应源码，提供官方直连与加速备用下载入口。\n4. 页面优先读取同站版本资料，失败自动切换加速和官方来源，降低对 GitHub API 的依赖。\n5. 安装包沿用原签名，源码与本版同步公开。"
+  "sha256": "aa0b295893f8a5626b3819e35006fff9d035537cd741aa95c2fe6da3d6f15541",
+  "sizeBytes": 103911,
+  "notes": "1. 选定阵容后点击“长条”，切换为仅显示英雄与各自推荐装备的精简悬浮条，隐藏筛选、排名、统计和其他详情。\n2. 每个英雄独立展示头像、名称和装备；横向排列，窗口较窄时可以左右滑动查看完整阵容。\n3. 长条固定当前阵容快照，后台刷新不会替换；左侧小图标支持拖动，点击恢复完整面板。\n4. 右下角可拖动调整长条宽度，完整面板原来的宽高独立保留；回到主程序和新一局时退出长条模式。\n5. 保留图片缓存、透明度、退出/返回软件、GitHub 加速更新与原签名覆盖升级，源码同步发布。"
 }

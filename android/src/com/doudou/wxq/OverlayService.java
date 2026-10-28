@@ -20,6 +20,7 @@ public final class OverlayService extends Service {
  private OverlayWindowSession session;private final OverlayState state=new OverlayState();
  private final Handler handler=new Handler(Looper.getMainLooper());
  private boolean resizing=false,destroyed=false,ready=false,retryQueued=false;
+ private int stripHeroes=5;
  private String initError="悬浮服务尚未准备好";
  private JSONObject ui(){return Repository.json(Repository.get(this).prefs.getString("ui","{}"));}
  private float density(){return (windowContext==null?getResources():windowContext.getResources()).getDisplayMetrics().density;}
@@ -50,7 +51,7 @@ public final class OverlayService extends Service {
    root=new FrameLayout(windowContext);root.setClipChildren(true);
    icon=new ImageView(windowContext);icon.setImageResource(R.drawable.ic_floating);icon.setScaleType(ImageView.ScaleType.FIT_CENTER);icon.setPadding(dp(2),dp(2),dp(2),dp(2));icon.setElevation(dp(8));icon.setClickable(true);icon.setFocusable(false);
    root.addView(icon,new FrameLayout.LayoutParams(dp(44),dp(44),Gravity.TOP|Gravity.LEFT));
-   icon.setOnClickListener(v->handler.post(()->{if(!destroyed){state.toggle();reconcile(true);}}));installIconDrag();
+   icon.setOnClickListener(v->handler.post(()->{if(!destroyed){state.toggle();reconcile(true);publishMode();}}));installIconDrag();
    session=new OverlayWindowSession(new OverlayWindowSession.Surface(){
     public boolean isAttached(){return root.getParent()!=null;}
     public void attach(boolean visible,boolean expanded){prepareWindow(visible,expanded);wm.addView(root,windowParams);}
@@ -76,26 +77,37 @@ public final class OverlayService extends Service {
   if(!visible)windowParams.flags|=WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;windowParams.alpha=visible?1f:0f;root.setVisibility(visible?View.VISIBLE:View.INVISIBLE);
   if(web!=null)web.setVisibility(expanded?View.VISIBLE:View.GONE);if(resizeHandle!=null)resizeHandle.setVisibility(expanded?View.VISIBLE:View.GONE);
   if(expanded){int alpha=Math.round(Math.max(30,Math.min(100,ui().optInt("opacity",88)))*2.55f);GradientDrawable bg=new GradientDrawable();bg.setColor(Color.argb(alpha,17,29,43));bg.setCornerRadius(dp(13));bg.setStroke(dp(.5f),0x609dddc9);root.setBackground(bg);root.setClipToOutline(true);}else{root.setClipToOutline(false);root.setBackground(null);}
-  icon.setVisibility(View.VISIBLE);icon.bringToFront();icon.setAlpha(expanded?1f:.90f);icon.setContentDescription(expanded?"收起阵容面板":"展开阵容面板");
+  boolean strip=expanded&&state.showStrip();
+  icon.setLayoutParams(new FrameLayout.LayoutParams(dp(strip?28:44),dp(44),strip?Gravity.LEFT|Gravity.CENTER_VERTICAL:Gravity.TOP|Gravity.LEFT));
+  icon.setImageResource(strip?R.drawable.ic_restore:R.drawable.ic_floating);
+  if(resizeHandle!=null)resizeHandle.setLayoutParams(new FrameLayout.LayoutParams(dp(strip?20:32),dp(strip?24:32),Gravity.RIGHT|Gravity.BOTTOM));
+  icon.setVisibility(View.VISIBLE);icon.bringToFront();icon.setAlpha(expanded?1f:.90f);icon.setContentDescription(strip?"恢复完整阵容面板；拖动可移动长条":expanded?"收起阵容面板":"展开阵容面板");
  }
  private void position(){
   if(!state.showPanel()){resizing=false;iconParams.x=OverlayGeometry.clamp(iconParams.x,0,screenW()-dp(44));iconParams.y=OverlayGeometry.clamp(iconParams.y,0,screenH()-dp(44));return;}if(resizing)return;
-  JSONObject p=ui();OverlayGeometry.Box b=OverlayGeometry.place(screenW(),screenH(),iconParams.x,iconParams.y,dp(OverlayGeometry.clamp(p.optInt("width",392),250,960)),dp(OverlayGeometry.clamp(p.optInt("height",230),170,900)));
+  JSONObject p=ui();boolean strip=state.showStrip();
+  int width=strip?Repository.get(this).prefs.getInt("strip_width_dp",stripHeroes*80+52):p.optInt("width",392);
+  OverlayGeometry.Box b=OverlayGeometry.place(screenW(),screenH(),iconParams.x,iconParams.y,dp(OverlayGeometry.clamp(width,250,960)),dp(strip?98:OverlayGeometry.clamp(p.optInt("height",230),170,900)));
   iconParams.x=b.iconX;iconParams.y=b.iconY;panelParams.x=b.x;panelParams.y=b.y;panelParams.width=b.width;panelParams.height=b.height;
  }
  private void installResize(){
-  resizeHandle.setOnClickListener(v->Toast.makeText(this,"拖动右下角调整大小，松手自动保存",Toast.LENGTH_SHORT).show());
+  resizeHandle.setOnClickListener(v->Toast.makeText(this,state.showStrip()?"拖动右下角调整长条宽度，左侧图标恢复完整面板":"拖动右下角调整大小，松手自动保存",Toast.LENGTH_SHORT).show());
   resizeHandle.setOnTouchListener(new View.OnTouchListener(){
    float sx,sy;int width,height,x,y;final DragTapTracker gesture=new DragTapTracker(ViewConfiguration.get(OverlayService.this).getScaledTouchSlop());
-   private void resize(MotionEvent e){OverlayGeometry.Box b=OverlayGeometry.resize(screenW(),screenH(),x,y,width,height,Math.round(e.getRawX()-sx),Math.round(e.getRawY()-sy),dp(250),dp(170));panelParams.width=Math.min(b.width,dp(960));panelParams.height=Math.min(b.height,dp(900));reconcile(true);}
+   private void resize(MotionEvent e){boolean strip=state.showStrip();OverlayGeometry.Box b=OverlayGeometry.resize(screenW(),screenH(),x,y,width,height,Math.round(e.getRawX()-sx),strip?0:Math.round(e.getRawY()-sy),dp(250),dp(strip?98:170));panelParams.width=Math.min(b.width,dp(960));panelParams.height=strip?height:Math.min(b.height,dp(900));reconcile(true);}
    public boolean onTouch(View v,MotionEvent e){switch(e.getActionMasked()){
     case MotionEvent.ACTION_DOWN:sx=e.getRawX();sy=e.getRawY();width=panelParams.width;height=panelParams.height;x=panelParams.x;y=panelParams.y;gesture.begin(sx,sy);resizing=true;resizeHandle.setAlpha(1f);return true;
     case MotionEvent.ACTION_MOVE:if(resizing&&gesture.move(e.getRawX(),e.getRawY()))resize(e);return true;
-    case MotionEvent.ACTION_UP:if(!resizing){gesture.cancel();return true;}boolean tap=gesture.finish(e.getRawX(),e.getRawY());if(!tap)resize(e);resizing=false;resizeHandle.setAlpha(.75f);if(tap)v.performClick();else if(state.showPanel()){JSONObject p=ui();Repository.put(p,"width",Math.round(panelParams.width/density()));Repository.put(p,"height",Math.round(panelParams.height/density()));Repository.get(OverlayService.this).saveUi(p);}return true;
+    case MotionEvent.ACTION_UP:if(!resizing){gesture.cancel();return true;}boolean tap=gesture.finish(e.getRawX(),e.getRawY());if(!tap)resize(e);resizing=false;resizeHandle.setAlpha(.75f);if(tap)v.performClick();else if(state.showStrip())Repository.get(OverlayService.this).prefs.edit().putInt("strip_width_dp",Math.round(panelParams.width/density())).apply();else if(state.showPanel()){JSONObject p=ui();Repository.put(p,"width",Math.round(panelParams.width/density()));Repository.put(p,"height",Math.round(panelParams.height/density()));Repository.get(OverlayService.this).saveUi(p);}return true;
     case MotionEvent.ACTION_CANCEL:gesture.cancel();resizing=false;resizeHandle.setAlpha(.75f);reconcile(true);return true;default:return true;}}
   });resizeHandle.setAlpha(.75f);
  }
- void setHostVisible(boolean visible){state.setHostVisible(visible);reconcile(true);}
+ void setHostVisible(boolean visible){state.setHostVisible(visible);reconcile(true);publishMode();}
+ void setStripMode(boolean enabled,int heroCount){
+  if(enabled&&(heroCount<1||heroCount>20||!state.showPanel())){publishMode();return;}
+  stripHeroes=Math.max(1,Math.min(20,heroCount));resizing=false;state.setStrip(enabled);reconcile(true);publishMode();
+ }
+ private void publishMode(){if(web!=null){JSONObject e=Repository.event("overlayMode");Repository.put(e,"mode",state.showStrip()?"strip":"panel");web.onEvent(e);}}
  private boolean reconcile(boolean retry){
   if(destroyed||session==null)return false;
   if(!Settings.canDrawOverlays(this)){session.close();ready=false;Repository.get(this).prefs.edit().putBoolean("overlay_enabled",false).apply();initError="悬浮窗权限已关闭，请重新允许后启用";stopSelf();return false;}

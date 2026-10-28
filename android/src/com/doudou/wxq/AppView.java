@@ -69,6 +69,7 @@ final class AppView extends WebView implements Repository.Listener {
             }
             case "stop":if(getContext() instanceof MainActivity)((MainActivity)getContext()).cancelOverlayStart();repo.prefs.edit().putBoolean("overlay_enabled",false).apply();getContext().stopService(new Intent(getContext(),OverlayService.class));break;
             case "minimize":if(OverlayService.instance!=null)OverlayService.instance.collapse();break;
+            case "stripMode":if(overlay&&OverlayService.instance!=null)OverlayService.instance.setStripMode(data.optBoolean("enabled"),data.optInt("heroCount"));break;
             case "openApp":if(overlay){try{getContext().startActivity(new Intent(getContext(),MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP));if(OverlayService.instance!=null)OverlayService.instance.setHostVisible(true);}catch(RuntimeException ex){android.widget.Toast.makeText(getContext(),"暂时无法打开软件，请从桌面进入",android.widget.Toast.LENGTH_LONG).show();}}break;
             case "exitApp":if(overlay)((WxqApplication)getContext().getApplicationContext()).exitApp();break;
             case "background":if(getContext() instanceof MainActivity)((MainActivity)getContext()).moveTaskToBack(true);break;

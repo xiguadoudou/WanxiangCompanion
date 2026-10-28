@@ -13,6 +13,12 @@ public final class OverlayModelTest {
         s.toggle();s.setHostVisible(true);check(!s.showIcon()&&!s.showPanel(),"Return to own app hides both windows");
         s.setHostVisible(false);check(s.showIcon()&&!s.showPanel(),"Leaving own app must not reopen a panel unexpectedly");
         s.toggle();s.collapse();check(s.showIcon()&&!s.showPanel(),"Back collapses panel while preserving icon");
+        s.setStrip(true);check(!s.showStrip(),"Cannot enter strip while collapsed");
+        s.toggle();s.setStrip(true);check(s.showStrip()&&s.showPanel(),"Selected lineup strip stays in the same expanded window");
+        s.toggle();check(!s.showStrip()&&s.showPanel(),"Strip restore icon must return to full panel, not close it");
+        s.setStrip(true);s.collapse();check(!s.showStrip()&&!s.showPanel(),"Failed panel recovery clears strip mode");
+        s.toggle();s.setStrip(true);s.setHostVisible(true);check(!s.showStrip()&&!s.showIcon(),"Entering main hides and clears strip mode");
+        s.setHostVisible(false);s.toggle();check(!s.showStrip()&&s.showPanel(),"Next main entry starts in full mode");
         int layouts=0;
         for(int[] size:new int[][]{{800,364},{640,320},{392,800},{1536,698},{2400,1080}}){
             int w=size[0],h=size[1];

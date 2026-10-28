@@ -29,7 +29,8 @@ jobs:
       - name: Check overlay recovery and persistent image cache
         run: |
           mkdir -p "$RUNNER_TEMP/wxq-native"
-          java -m jdk.compiler/com.sun.tools.javac.Main --release 8 -encoding UTF-8 -d "$RUNNER_TEMP/wxq-native" android/src/com/doudou/wxq/{BuildInfo,OverlayState,OverlayWindowSession,OverlayStartGate,ImageDiskCache}.java android/tests/{OverlayReliabilityTest,ImageDiskCacheTest}.java
+          java -m jdk.compiler/com.sun.tools.javac.Main --release 8 -encoding UTF-8 -d "$RUNNER_TEMP/wxq-native" android/src/com/doudou/wxq/{BuildInfo,OverlayState,OverlayGeometry,DragTapTracker,OverlayWindowSession,OverlayStartGate,ImageDiskCache}.java android/tests/{OverlayModelTest,OverlayReliabilityTest,ImageDiskCacheTest}.java
+          java -cp "$RUNNER_TEMP/wxq-native" com.doudou.wxq.OverlayModelTest
           java -cp "$RUNNER_TEMP/wxq-native" com.doudou.wxq.OverlayReliabilityTest
           java -cp "$RUNNER_TEMP/wxq-native" com.doudou.wxq.ImageDiskCacheTest
       - name: Check update proxy routing and fallback

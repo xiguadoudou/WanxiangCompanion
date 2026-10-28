@@ -1,10 +1,14 @@
 # 万象弈伴 · GitHub 更新
 
-Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.12**，包名 `com.doudou.wxq`，版本号 13。
+Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.13**，包名 `com.doudou.wxq`，版本号 14。
 
-[查看 Android 源码](android/) · [下载当前源码包](https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.12/WanxiangCompanion-0.1.12-source.zip)
+[查看 Android 源码](android/) · [下载当前源码包](https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.13/WanxiangCompanion-0.1.13-source.zip)
 
-[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.12.apk)
+[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.13.apk)
+
+## 0.1.13 固定阵容长条
+
+在悬浮窗中选择阵容，点详情标题旁“长条”，即可仅保留这套阵容的英雄头像、名字和各自装备。长条约 98 dp 高，横向排列，较窄时左右滑动；当前阵容快照固定，后台刷新不会替换。左侧小图标可拖动整条，点击恢复完整面板，右下角拖动只调整长条宽度，完整面板原来的大小不受影响。回到主程序、新局、显示恢复失败会退出长条模式。
 
 ## 0.1.12 悬浮窗操作与下载页加速
 

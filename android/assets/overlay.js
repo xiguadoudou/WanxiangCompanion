@@ -5,7 +5,7 @@
  const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const src=u=>/^https:\/\//.test(u||'')?esc(u):fallback;
  const cmd=(action,data={})=>{if(window.Native)Native.command(JSON.stringify({action,data}));};
- let ui={commanderId:'',bans:[],sort:'avgPlacement',days:7,minCount:10,opacity:88,width:392,height:230},catalog={commanders:[]},data=null,rows=[],selectedKey='',heroId='',booted=false,timer,toastTimer,lastStatus='正在检查更新',copySeq=0;
+ let ui={commanderId:'',bans:[],sort:'avgPlacement',days:7,minCount:10,opacity:88,width:392,height:230},catalog={commanders:[]},data=null,rows=[],selectedKey='',heroId='',booted=false,timer,toastTimer,lastStatus='正在检查更新',copySeq=0,pinnedRow=null;
  const pct=v=>((+v||0)*100).toFixed(1)+'%';
  function query(){const c=catalog.commanders.find(x=>String(x.id)===String(ui.commanderId));return {commanderId:ui.commanderId,commanderName:c?.name||'',bans:L.cleanBans(ui.bans),sort:ui.sort,days:ui.days,minCount:ui.minCount};}
  function save(){cmd('save',ui);}
@@ -25,8 +25,9 @@
  }
  function renderAppearance(){document.documentElement.style.setProperty('--surface-alpha',ui.opacity/100);for(const k of ['opacity','width','height']){$(k).value=ui[k];$(k+'Value').textContent=ui[k]+(k==='opacity'?'%':' dp');}}
  function invalidate(){if(!data||data.queryKey!==L.queryKey(query())){rows=[];selectedKey='';heroId='';$('candidates').innerHTML='<div class="loader"></div><div class="loader"></div>';$('detail').innerHTML='<div class="empty">正在匹配本局条件…</div>';}}
- function request(){if(!ui.commanderId)return;clearTimeout(timer);timer=setTimeout(()=>{setStatus('匹配中…','loading');cmd('query',query());},320);}
+ function request(){if(pinnedRow||!ui.commanderId)return;clearTimeout(timer);timer=setTimeout(()=>{setStatus('匹配中…','loading');cmd('query',query());},320);}
  function renderResult(){
+  if(pinnedRow)return;
   if(!data||data.queryKey!==L.queryKey(query()))return;
   rows=L.rank(data.rows||[],ui.sort).filter(r=>L.allowed(r,ui.bans)).slice(0,24);
   if(!rows.length){selectedKey='';$('candidates').innerHTML='<div class="empty-list">暂无匹配</div>';$('detail').innerHTML='<div class="empty"><b>当前条件暂无匹配</b>减少禁用项后重试'+(data.limited?'<br>候选尚未全部检索':'')+'</div>';return;}
@@ -43,16 +44,29 @@
   const r=rows.find(r=>r.key===selectedKey);if(!r)return;
   if(!r.heroes.some(h=>h.id===heroId))heroId=(r.heroes.find(h=>h.core)||r.heroes[0])?.id||'';
   const h=r.heroes.find(h=>h.id===heroId);
-  $('detail').innerHTML=`<div class="detail-head"><div class="detail-title"><h2 title="${esc(r.title)}">${esc(r.title)}</h2></div><button class="copy-main" id="copySelected" aria-label="${r.lineupCode?'复制阵容码':'数据源暂无阵容码'}" title="${r.lineupCode?'复制阵容码':'数据源暂无阵容码'}" ${r.lineupCode?'':'disabled'}>${r.lineupCode?'复制':'无码'}</button></div><div class="metrics"><span>均名<b>${(+r.avgPlacement).toFixed(2)}</b></span><span>前三<b>${pct(r.top3Rate)}</b></span><span>登顶<b>${pct(r.firstRate)}</b></span></div><div class="roster" aria-label="英雄，点击查看装备">${r.heroes.map((h,i)=>`<button class="hero ${h.core?'core':''} ${h.id===heroId?'selected':''}" data-hero="${i}" aria-label="${esc(h.name)}的装备" aria-pressed="${h.id===heroId}"><img src="${src(h.image)}" alt=""><span>${esc(h.name)}</span></button>`).join('')}</div><div class="equipment"><div class="items"><button class="equipment-label hero-picker" id="heroPicker" aria-label="选择英雄查看装备">${esc(h?.name||'装备')}<b class="chevron">⌄</b></button>${h?.items?.length?h.items.map(x=>`<span class="item">${x.image?'<img src="'+src(x.image)+'" alt="">':''}${esc(x.name)}</span>`).join(''):'<span class="equipment-note">暂无推荐装备</span>'}</div></div><section class="expanded-details"><div class="composition-note"><b>${r.size} 人 · 组合 ${(+r.count).toLocaleString()} 场 · 当前变阵 ${r.rosterCount??'未知'} 场</b><br>指标可能汇总其他变阵，平均等级为样本统计。</div><h3 class="team-title">全队装备速览</h3><div class="team-equipment">${r.heroes.map(u=>`<div class="team-unit ${u.id===heroId?'selected':''}"><strong>${esc(u.name)}${u.core?' · 核心':''}${u.level?' · 均级 '+Math.round(u.level):''}</strong><span>${u.items?.length?u.items.map(i=>esc(i.name)).join(' · '):'暂无推荐装备'}</span></div>`).join('')}</div></section>`;
+  $('detail').innerHTML=`<div class="detail-head"><div class="detail-title"><h2 title="${esc(r.title)}">${esc(r.title)}</h2></div><button class="strip-trigger" id="pinLineup" aria-label="将当前阵容固定为精简长条">长条</button><button class="copy-main" id="copySelected" aria-label="${r.lineupCode?'复制阵容码':'数据源暂无阵容码'}" title="${r.lineupCode?'复制阵容码':'数据源暂无阵容码'}" ${r.lineupCode?'':'disabled'}>${r.lineupCode?'复制':'无码'}</button></div><div class="metrics"><span>均名<b>${(+r.avgPlacement).toFixed(2)}</b></span><span>前三<b>${pct(r.top3Rate)}</b></span><span>登顶<b>${pct(r.firstRate)}</b></span></div><div class="roster" aria-label="英雄，点击查看装备">${r.heroes.map((h,i)=>`<button class="hero ${h.core?'core':''} ${h.id===heroId?'selected':''}" data-hero="${i}" aria-label="${esc(h.name)}的装备" aria-pressed="${h.id===heroId}"><img src="${src(h.image)}" alt=""><span>${esc(h.name)}</span></button>`).join('')}</div><div class="equipment"><div class="items"><button class="equipment-label hero-picker" id="heroPicker" aria-label="选择英雄查看装备">${esc(h?.name||'装备')}<b class="chevron">⌄</b></button>${h?.items?.length?h.items.map(x=>`<span class="item">${x.image?'<img src="'+src(x.image)+'" alt="">':''}${esc(x.name)}</span>`).join(''):'<span class="equipment-note">暂无推荐装备</span>'}</div></div><section class="expanded-details"><div class="composition-note"><b>${r.size} 人 · 组合 ${(+r.count).toLocaleString()} 场 · 当前变阵 ${r.rosterCount??'未知'} 场</b><br>指标可能汇总其他变阵，平均等级为样本统计。</div><h3 class="team-title">全队装备速览</h3><div class="team-equipment">${r.heroes.map(u=>`<div class="team-unit ${u.id===heroId?'selected':''}"><strong>${esc(u.name)}${u.core?' · 核心':''}${u.level?' · 均级 '+Math.round(u.level):''}</strong><span>${u.items?.length?u.items.map(i=>esc(i.name)).join(' · '):'暂无推荐装备'}</span></div>`).join('')}</div></section>`;
   $('copySelected').onclick=()=>copy(r);
+  $('pinLineup').onclick=()=>enterStrip(r);
   $('heroPicker').onclick=()=>{const opening=$('heroMenu').hidden;closeMenus();if(!opening)return;$('heroMenu').innerHTML=r.heroes.map((u,i)=>`<button class="hero-choice ${u.id===heroId?'active':''}" role="option" aria-selected="${u.id===heroId}" data-unit="${i}"><img src="${src(u.image)}" alt=""><span>${esc(u.name)}</span></button>`).join('');$('heroMenu').hidden=false;$('heroMenu').querySelectorAll('[data-unit]').forEach(b=>b.onclick=()=>{heroId=r.heroes[+b.dataset.unit].id;closeMenus();renderDetail();});};
   $('detail').querySelectorAll('[data-hero]').forEach(b=>b.onclick=()=>{heroId=r.heroes[+b.dataset.hero].id;const y=$('detail').scrollTop;renderDetail();$('detail').scrollTop=y;});
  }
+ function enterStrip(row){
+  if(!row?.heroes?.length){toast('当前阵容暂无英雄资料');return;}
+  pinnedRow=JSON.parse(JSON.stringify(row));clearTimeout(timer);closeMenus();
+  $('lineupStrip').innerHTML=pinnedRow.heroes.map(h=>`<article class="strip-unit" aria-label="${esc(h.name)}的推荐装备"><div class="strip-hero"><img src="${src(h.image)}" alt=""><strong>${esc(h.name)}</strong></div><div class="strip-equipment">${h.items?.length?h.items.map(i=>`<div class="strip-item" title="${esc(i.name)}">${i.image?'<img src="'+src(i.image)+'" alt="">':''}<span>${esc(i.name)}</span></div>`).join(''):'<span class="strip-no-items">暂无装备</span>'}</div></article>`).join('');
+  $('lineupStrip').scrollLeft=0;$('lineupStrip').hidden=false;document.body.classList.add('strip-mode');
+  cmd('stripMode',{enabled:true,heroCount:pinnedRow.heroes.length});
+ }
+ function leaveStrip(notify=true){
+  if(!pinnedRow)return;pinnedRow=null;document.body.classList.remove('strip-mode');$('lineupStrip').hidden=true;$('lineupStrip').innerHTML='';
+  if(notify)cmd('stripMode',{enabled:false});renderResult();
+ }
  function copy(r){if(!r?.lineupCode){toast('数据源暂未提供此阵容码');return;}cmd('copy',{text:r.lineupCode,token:'overlay-'+(++copySeq)});}
- function resetRoundUi(prefs){clearTimeout(timer);Object.assign(ui,prefs||{});ui.commanderId=String(prefs?.commanderId||'');ui.bans=[];data=null;rows=[];selectedKey='';heroId='';closeMenus();renderFilters();renderAppearance();$('candidates').innerHTML='<div class="empty-list">新一局</div>';$('detail').innerHTML='<div class="empty"><b>重新选择棋手</b>点选本局禁用后自动匹配</div>';setStatus(ui.commanderId?'常小娥 · 匹配中…':'已重置本局');if(ui.commanderId)request();}
+ function resetRoundUi(prefs){leaveStrip();clearTimeout(timer);Object.assign(ui,prefs||{});ui.commanderId=String(prefs?.commanderId||'');ui.bans=[];data=null;rows=[];selectedKey='';heroId='';closeMenus();renderFilters();renderAppearance();$('candidates').innerHTML='<div class="empty-list">新一局</div>';$('detail').innerHTML='<div class="empty"><b>重新选择棋手</b>点选本局禁用后自动匹配</div>';setStatus(ui.commanderId?'常小娥 · 匹配中…':'已重置本局');if(ui.commanderId)request();}
  function newRound(){resetRoundUi();cmd('resetRound');}
  window.App={receive(e){switch(e.type){
   case 'init':if(booted)return;booted=true;Object.assign(ui,e.prefs||{});catalog=e.catalog||catalog;L.configureCatalog(catalog);ui.bans=L.cleanBans(ui.bans);catalog.commanders??=[];data=e.data?.rows?e.data:null;renderFilters();renderAppearance();renderResult();if(data?.queryKey===L.queryKey(query()))setStatus('缓存 · '+(data.version||'')+' · 检查中','loading');if(ui.commanderId)request();break;
+  case 'overlayMode':if(e.mode!=='strip')leaveStrip(false);break;
   case 'roundReset':resetRoundUi(e.prefs);break;
   case 'catalog':catalog=e.catalog;L.configureCatalog(catalog);ui.bans=L.cleanBans(ui.bans);renderFilters();if(ui.commanderId)request();break;
   case 'preferences':{const before=L.queryKey(query());Object.assign(ui,e.prefs||{});renderAppearance();if(before!==L.queryKey(query())){renderFilters();if(ui.commanderId){invalidate();renderResult();request();}else{data=null;rows=[];$('candidates').innerHTML='<div class="empty-list">等待选择</div>';$('detail').innerHTML='<div class="empty">请选择本局棋手</div>';}}break;}
@@ -64,7 +78,7 @@
   case 'queryError':if(e.queryKey!==L.queryKey(query()))return;setStatus(e.message,'error');if(!data||data.queryKey!==e.queryKey){$('candidates').innerHTML='<div class="empty-list">查询未完成</div>';$('detail').innerHTML='<div class="empty"><b>连接暂不可用</b>点击右上角刷新重试</div>';}break;
   case 'bootError':setStatus(e.message,'error');if(!data&&ui.commanderId){$('candidates').innerHTML='<div class="empty-list">离线</div>';$('detail').innerHTML='<div class="empty">连接失败，点击刷新重试</div>';}break;
   case 'copyResult':toast(e.message||(e.ok?'阵容码已复制':'复制失败'));break;
- }},back(){if(['commanderMenu','heroMenu','appearance','message','exitConfirm'].some(id=>!$(id).hidden))closeMenus();else cmd('minimize');}};
+ }},back(){if(pinnedRow){leaveStrip();return;}if(['commanderMenu','heroMenu','appearance','message','exitConfirm'].some(id=>!$(id).hidden))closeMenus();else cmd('minimize');}};
  $('commanderTrigger').onclick=()=>{const opening=$('commanderMenu').hidden;closeMenus();$('commanderMenu').hidden=!opening;$('commanderTrigger').setAttribute('aria-expanded',String(opening));};
  $('appearanceTrigger').onclick=()=>{const opening=$('appearance').hidden;closeMenus();$('appearance').hidden=!opening;$('appearanceTrigger').setAttribute('aria-expanded',String(opening));};
  $('closeAppearance').onclick=$('closeMessage').onclick=closeMenus;

@@ -10,6 +10,7 @@
 <main class="panel">
  <div class="filterbar"><button id="commanderTrigger" class="commander-trigger" aria-label="选择棋手" aria-expanded="false"><span>选择棋手</span><b class="chevron">⌄</b></button><div class="bans" id="bans" role="group" aria-label="点击禁用阵营，可多选"></div><button class="round" id="nextRound" aria-label="新一局，重选棋手和禁用">新局</button></div>
  <div class="toolbar"><button class="status loading" id="status" aria-label="查看同步状态"><span class="dot"></span><span id="statusText">正在检查更新</span></button><button class="scope" id="scope" hidden>排除</button><div class="sorts" aria-label="阵容排序"><button class="sort active" data-sort="avgPlacement">均名</button><button class="sort" data-sort="top3Rate">前三</button><button class="sort" data-sort="firstRate">登顶</button></div><button class="tool refresh" id="refresh" aria-label="刷新阵容">↻</button><button class="tool" id="appearanceTrigger" aria-label="悬浮窗菜单：返回软件、退出与外观" aria-expanded="false">菜单</button></div>
+ <section id="lineupStrip" class="lineup-strip" aria-label="固定阵容的英雄和装备" hidden></section>
  <div class="workspace"><section class="candidates" id="candidates" aria-label="推荐阵容"><div class="empty-list">等待选择棋手</div></section><section class="detail" id="detail" aria-label="当前阵容"><div class="empty"><b>选择棋手，直接看阵容</b>上方点选禁用<br>左侧切换阵容</div></section></div>
  <div class="popover commander-menu" id="commanderMenu" role="listbox" aria-label="棋手下拉菜单" hidden></div>
  <div class="popover hero-menu" id="heroMenu" role="listbox" aria-label="切换英雄查看装备" hidden></div>
