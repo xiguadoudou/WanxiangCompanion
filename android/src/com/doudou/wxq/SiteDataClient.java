@@ -69,7 +69,7 @@ final class SiteDataClient {
             if(sections!=null)for(int j=0;j<sections.length();j++){JSONObject section=sections.getJSONObject(j);JSONArray entries=section.optJSONArray("entries");if(entries==null||entries.length()==0)continue;JSONObject first=entries.getJSONObject(0);skills.put(new JSONObject().put("type",section.optString("type")).put("name",first.optString("name")).put("text",first.optString("description")));if(skillName.isEmpty()){skillName=first.optString("name");skillText=first.optString("description");}}
             cs.put(new JSONObject().put("id",c.optString("id")).put("name",c.optString("name")).put("avatar",assets==null?"":assets.optString("avatar")).put("skillName",skillName).put("skillText",skillText).put("skills",skills));
         }
-        return new JSONObject().put("version",version).put("sourceBuild",build).put("checkedAt",System.currentTimeMillis()).put("commanders",cs).put("heroes",hs).put("items",es).put("factions",catalogFactions(hs,source)).put("apiBase","https://api.datatft.com").put("publicSignatureSalt",salt);
+        return new JSONObject().put("version",version).put("sourceBuild",build).put("checkedAt",System.currentTimeMillis()).put("commanders",cs).put("heroes",hs).put("items",es).put("factions",catalogFactions(hs,source)).put("apiBase","https://api.datatft.com").put("publicSignatureSalt",salt).put("_workshopData",WorkshopData.extract(source,build));
     }
     static JSONArray catalogFactions(JSONArray hs,String source)throws Exception{
         LinkedHashSet<String> names=new LinkedHashSet<>();for(int i=0;i<hs.length();i++){String name=hs.getJSONObject(i).optString("faction");if(!name.isEmpty()&&!name.equals("无阵营"))names.add(name);}

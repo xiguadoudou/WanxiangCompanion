@@ -7,7 +7,17 @@
 - `res/`、`AndroidManifest.xml`：安卓资源、组件和权限。
 - `tests/`：保留的原生与界面回归检查，`fixtures/` 为历史公开数据响应测试资料，产品不使用这些测试响应代替在线推荐。
 
-## 0.1.16 侧边栏与在线模块
+## 0.1.17 本地模块
+
+`WorkshopView` 替换并移除了在线 `SiteModuleView`。`LocalWorkshop` 校验并读取 APK 中的授权移植组件 ZIP，仅在虚拟 app-asset 原点提供本地 HTML/JS/CSS/JSON；CSP 禁止远程脚本及账号 API。基础图片从包内读取，其他图片复用现有磁盘缓存。原站组件数据字面量已剥离到 `library-data.json`，`WorkshopData` 在已有更新链路中解析字面记录并原子保存，原站脚本不会在模块中执行。
+
+授权移植来源、未改动文件摘要、基础数据与图片表在 `assets/workshop/site.zip` 内；本地适配源码在同目录 index.html/port.js/port.css。`tools/build_local_modules.py` 和 `tools/PrepareWorkshop.java` 重建公共模块，`tools/repack_workshop.py` 重打适配器。source_package.py 只对这个指定 ZIP 放行，并检查每个内部文件的类型、路径、体积与敏感数据，其他私钥和嵌套归档仍禁止。
+
+`LocalPlan` 验证、导入、导出软件方案，`WorkshopView` 管理最多 12 个命名方案和持续草稿；`port.js` 本地 Canvas 绘图通过限定的 PNG 保存提示回调交给 `LocalPngExporter`，Android 10+ 写入图库，旧系统写入应用图片目录。模块不暴露通用 Native JS 桥。软件方案码与游戏内阵容码不同。
+
+`workshop-local.test.cjs` 将所有非打包网络请求中止，验证桌面/手机启动、英雄与装备、鼠标/触摸站位、方案恢复、PNG 与六类资料。`WorkshopModelTest` 验证完整记录、纯数据刷新及方案码约束；已有侧边栏与更新 UI 回归通过。
+
+## 0.1.16 侧边栏与在线模块（历史实现）
 
 `MainActivity` 内的原生侧边栏统一切换推荐、模拟、资料库，`ModuleTabs` 延迟创建并保留三个页面；切换不触发 Activity 前后台重建或重置推荐条件。原本 AppView 独立放入 mainPane，显示失败的重新加载不会移除其他模块。旋转保留页面并调整侧边栏大小。
 

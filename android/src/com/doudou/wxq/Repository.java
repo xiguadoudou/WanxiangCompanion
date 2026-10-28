@@ -53,6 +53,7 @@ final class Repository {
   io.execute(()->{
    try{
     JSONObject c=client.refresh(s->{JSONObject e=event("dataStatus");put(e,"state","checking");put(e,"message",s);post(e);});
+    JSONObject workshop=c.optJSONObject("_workshopData");c.remove("_workshopData");if(workshop!=null)LocalWorkshop.saveData(app,workshop);
     main.post(()->{String previous=catalog.optString("sourceBuild");catalog=c;warmImages(catalog);loading=false;prefs.edit().putString("catalog",c.toString()).apply();JSONObject e=event("catalog");put(e,"catalog",catalog);put(e,"changed",!previous.equals(c.optString("sourceBuild")));emit(e);JSONObject done=event("dataStatus");put(done,"state","current");put(done,"message","数据资料已检查 · "+c.optString("version"));emit(done);});
    }catch(Exception ex){main.post(()->{loading=false;JSONObject e=event("dataStatus");put(e,"state","failed");put(e,"message","资料检查失败，仍可用内置/缓存资料查询："+ex.getMessage());emit(e);});}
   });

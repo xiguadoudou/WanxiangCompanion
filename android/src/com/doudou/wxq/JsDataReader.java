@@ -6,6 +6,7 @@ import org.json.*;
 final class JsDataReader {
     private final String s;private int p;private int depth;
     JsDataReader(String s,int start){this.s=s;p=start;}
+    int position(){return p;}
     private void space(){while(p<s.length()&&Character.isWhitespace(s.charAt(p)))p++;}
     private char peek(){space();return p<s.length()?s.charAt(p):'\0';}
     private void need(char c){if(peek()!=c)throw new IllegalArgumentException("资料格式变化 @"+p);p++;}

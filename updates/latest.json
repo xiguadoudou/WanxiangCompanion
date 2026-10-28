@@ -1,12 +1,12 @@
 {
   "packageName": "com.doudou.wxq",
-  "versionCode": 17,
-  "versionName": "0.1.16",
-  "apkUrl": "https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.16/WanxiangCompanion-0.1.16.apk",
+  "versionCode": 18,
+  "versionName": "0.1.17",
+  "apkUrl": "https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.17/WanxiangCompanion-0.1.17.apk",
   "apkFallbackUrls": [
-    "https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.16.apk"
+    "https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.17.apk"
   ],
-  "sha256": "3b50978c729d5f85aeb4bfdd7f89421233bf444a01b05f58067d6f9cfdbf077a",
-  "sizeBytes": 112175,
-  "notes": "1. 主页面左上角新增功能侧边栏，可切换阵容推荐、阵容模拟、万象资料库。\n2. 阵容模拟以内置在线页面接入原站，可编排英雄、装备和站位，横屏操作更方便。\n3. 万象资料库接入原站手机版，支持英雄、棋手、装备、天赋、效果牌、初始卡包等分类和搜索。\n4. 切换模块保留当前页面状态，提供返回推荐、加载进度、重新加载和失败重试；两个新增模块需联网。\n5. 在线模块共享已有图片缓存，与本地软件控制接口隔离；软件内浏览模块时悬浮窗继续自动隐藏。\n6. 保留简易模式、锁定透传、50% 默认透明度、GitHub 加速更新及原签名覆盖安装，源码同步发布。"
+  "sha256": "fb2ea2aa8f15a4e9ac42b346141412bf52ce283fb453d297646edd40b64a1552",
+  "sizeBytes": 9263064,
+  "notes": "1. 阵容模拟和万象资料库改为本地移植：将获授权的原站组件、样式与完整基础数据打入安装包，不再打开原站网页或加载远程脚本。\n2. 保留棋盘、英雄、装备、棋手、天赋、觉醒与站位编排，以及资料库六类筛选、搜索和详情，支持断网使用基础功能。\n3. 软件自行实现本机方案保存、打开、软件方案码复制/导入，以及阵容图和横向图导出；软件方案码不是游戏阵容码。\n4. 内置 268 张基础头像/图标和阶级图标，其他插图按需联网缓存；联网自动检查并同步资料记录，不执行下载的脚本。\n5. 保留侧边栏切换、推荐条件、悬浮窗简易与点击透传等原有功能；安装包因包含本地资源增至约 9 MB。\n6. 已验证完全阻断外网时的模块启动、添加英雄、鼠标/触摸移动站位、穿戴装备、图片导出与资料库六类内容；继续沿用原签名覆盖升级，源码同步发布。"
 }

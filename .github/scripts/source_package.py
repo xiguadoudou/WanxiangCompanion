@@ -7,7 +7,7 @@ import xml.etree.ElementTree as ET
 import zipfile
 
 ROOT_FILES = ('AndroidManifest.xml', 'build.sh', 'README.md')
-SOURCE_DIRS = ('src', 'assets', 'res', 'tests')
+SOURCE_DIRS = ('src', 'assets', 'res', 'tests', 'tools')
 ANDROID_NS = '{http://schemas.android.com/apk/res/android}'
 FORBIDDEN_SUFFIXES = {'.jks', '.keystore', '.p12', '.pfx', '.pem', '.key', '.apk', '.zip', '.pyc'}
 
@@ -28,7 +28,20 @@ def source_files(root):
         rel = file.relative_to(root)
         if not file.is_file() or file.is_symlink():
             raise ValueError('Missing public source file: ' + str(rel))
-        if any(p in {'signing', 'build', 'dist', 'node_modules', '__pycache__', '.git'} for p in rel.parts) or file.name.startswith('.env') or file.suffix.lower() in FORBIDDEN_SUFFIXES:
+        is_workshop = rel.as_posix() == 'assets/workshop/site.zip'
+        if is_workshop:
+            with zipfile.ZipFile(file) as bundle:
+                names = bundle.namelist()
+                if len(names) != len(set(names)) or len(names) > 700 or sum(i.file_size for i in bundle.infolist()) > 40000000:
+                    raise ValueError('Invalid local module archive')
+                for name in names:
+                    path = Path(name)
+                    if path.is_absolute() or '\\' in name or any(p in {'..','.git','signing','node_modules'} for p in path.parts) or path.name.startswith('.env') or path.suffix.lower() not in {'.js','.css','.json','.html','.png','.jpg','.webp','.svg','.woff2','.txt','.md'}:
+                        raise ValueError('Private/generated file inside module archive: ' + name)
+                    data = bundle.read(name)
+                    if re.search(rb'-----BEGIN (?:[A-Z]+ )?PRIVATE KEY-----|github_pat_[A-Za-z0-9_]{20,}|gh[pousr]_[A-Za-z0-9]{20,}',data):
+                        raise ValueError('Credential-like content inside module archive: ' + name)
+        if any(p in {'signing', 'build', 'dist', 'node_modules', '__pycache__', '.git'} for p in rel.parts) or file.name.startswith('.env') or (file.suffix.lower() in FORBIDDEN_SUFFIXES and not is_workshop):
             raise ValueError('Private/generated file in public source: ' + str(rel))
         content = file.read_bytes()
         if re.search(rb'-----BEGIN (?:[A-Z]+ )?PRIVATE KEY-----|github_pat_[A-Za-z0-9_]{20,}|gh[pousr]_[A-Za-z0-9]{20,}', content):

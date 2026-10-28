@@ -1,0 +1,5 @@
+html,body,#app{min-height:100%;margin:0;background:#0b0f18;color:#e9efef}body{font-family:system-ui,"Noto Sans CJK SC",sans-serif}
+.ep-header,.ep-footer,footer,.site-footer,.app-footer,.h5-header,.h5-bottom-nav,.h5-tabbar{display:none!important}
+.ep-layout{padding-top:0!important}.ep-main{padding:0!important}.simulator-view{margin:0 auto!important;padding:10px!important;max-width:1280px!important}.h5-shell{padding-top:0!important;padding-bottom:12px!important}
+.wxq-port-hidden{display:none!important}.wxq-port-note{font-size:11px;color:#94aaa9;padding:8px 12px}
+@media(max-width:600px){.simulator-view{padding:5px!important}.setting-wrapper{margin-top:0!important}}

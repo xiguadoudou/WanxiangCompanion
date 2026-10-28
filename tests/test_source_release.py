@@ -12,7 +12,7 @@ import zipfile
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / '.github/scripts'))
-from source_package import package_source
+from source_package import package_source, source_files
 
 spec = importlib.util.spec_from_file_location('publisher', REPO / '.github/scripts/publish-release.py')
 publisher = importlib.util.module_from_spec(spec)
@@ -81,6 +81,15 @@ class SourceReleaseTest(unittest.TestCase):
             self.assertFalse(any('/signing/' in n or n.endswith('.env') or n.endswith('.jks') for n in names))
             receipt = json.loads(z.read(next(n for n in names if n.endswith('/SOURCE.json'))))
             self.assertEqual(receipt['apkSha256'], self.manifest['sha256'])
+
+    def test_local_bundle_rejects_private_and_escape_paths(self):
+        target = Path('android/assets/workshop/site.zip')
+        target.parent.mkdir(parents=True, exist_ok=True)
+        for name in ['../outside.js', '.env.js', 'signing/password.txt', 'nested.zip', 'C:\\private.js']:
+            with zipfile.ZipFile(target, 'w') as archive:
+                archive.writestr(name, b'test-only')
+            with self.assertRaisesRegex(ValueError, 'Private/generated'):
+                source_files('android')
 
     def test_reject_stale_source_version_before_publication(self):
         p = Path('android/AndroidManifest.xml')
