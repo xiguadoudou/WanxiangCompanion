@@ -1,10 +1,18 @@
 # 万象弈伴 · GitHub 更新
 
-Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.18**，包名 `com.doudou.wxq`，版本号 19。
+Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.19**，包名 `com.doudou.wxq`，版本号 20。
 
-[查看 Android 源码](android/) · [下载当前源码包](https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.18/WanxiangCompanion-0.1.18-source.zip)
+[查看 Android 源码](android/) · [下载当前源码包](https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.19/WanxiangCompanion-0.1.19-source.zip)
 
-[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.18.apk)
+[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.19.apk)
+
+## 0.1.19 连续页面、棋盘导出与动效
+
+模块顶部工具栏并入本地页面，与正文共享同一背景及滚动，不再拼接一段原生渐变。方案菜单改为同风格的本地弹层；软件操作通过严格限定的本机提示回调交给 Android，不开放远程页面或通用 Native 接口。首页移除中间的更新跳转箭头，设置改为齿轮，更新操作仍在设置内。
+
+阵容图直接从实际棋盘区域导出，采用浅色底和格子，包含站位、英雄/特殊单位头像、装备、星级/觉醒、备选、棋手与天赋牌区域；不再另绘一张遗漏内容的棋盘。随包补齐 9 张特殊单位图片。横向图沿用实际角色元素导出，不必改变棋盘模式；其他非内置插图仍按需联网缓存。
+
+侧边栏增加滑动和跟手效果：左侧边缘右滑展开，面板向左滑收起；竖向滚动和非边缘棋盘拖动交给原页面。主功能切换、设置、详情和弹层提供短过渡，并尊重系统关闭动画/减少动态效果设置。构建及离线回归覆盖导出尺寸、浅色格子、特殊单位、本地模块路由、横竖屏、齿轮设置和更新流程；原生系统手势仍以设备表现为准。
 
 ## 0.1.18 模块风格与导航修复
 

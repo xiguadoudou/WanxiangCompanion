@@ -7,6 +7,14 @@
 - `res/`、`AndroidManifest.xml`：安卓资源、组件和权限。
 - `tests/`：保留的原生与界面回归检查，`fixtures/` 为历史公开数据响应测试资料，产品不使用这些测试响应代替在线推荐。
 
+## 0.1.19 页面融合、导出与动画
+
+模块自己的 HTML 顶栏和正文共用同一 body 背景；`WorkshopView` 不再叠加独立原生工具栏。顶栏固定动作使用 `__WXQ_APP_ACTION__` 提示回调，Android 校验当前 WebView、模块 URL 与动作白名单后处理导航、本机方案和刷新；PNG 仍走单独限定的保存回调。不注入通用原生桥。
+
+`port.js` 复用已打包的 html2canvas（保留原许可），直接捕获 `.board-capture-shell`，克隆中只更换浅色导出背景、格子及标签颜色，保留实际图像与附属区域。横向导出从实际角色 DOM 创建临时捕获区，结束即移除。`tools/cache_special_images.py` 根据基础记录解析并缓存原模拟器使用的特殊单位图片，重建脚本调用同一函数。离线 UI 回归检查导出范围、像素颜色、机械仆从图像和横向捕获区回收。
+
+`MainActivity` 原生抽屉使用 ValueAnimator 与边缘触摸判定实现跟手拖动和回弹；页面切换使用短淡入位移，软件设置/详情/本地菜单提供对应 CSS/WAAPI 过渡。系统禁用动画时原生立即完成，Web 遵守 prefers-reduced-motion。首页更新箭头入口移除，更新流程仍可由齿轮设置进入。
+
 ## 0.1.18 外观和路由统一
 
 `port.css` 将两套原站组件主题映射到首页的薄荷绿与磨砂卡片，并移除两套外壳导航和底部占位。`WorkshopView` 工具栏统一标识、间距、圆角工具按钮；标题说明随当前模块显示。`port.js` 在 Vue 挂载后注册当前模块路由守卫，对网站外壳设置 hidden/inert，并限制跨模块链接、History 和新窗口；`SiteModules.owns` 在 Android 导航与草稿存储中校验模块归属，切换功能只经过原生侧边栏。

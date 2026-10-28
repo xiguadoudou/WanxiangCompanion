@@ -67,14 +67,18 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
         mapping[url]='images/'+name
         if i%25==0:print('Bundled core images:',i,'/',len(urls),flush=True)
 (work/'image-map.json').write_text(json.dumps(mapping))
+from cache_special_images import cache_special_images
+cache_special_images(work)
 # The module HTML/CSS/adapters are maintained source files, not fetched website HTML.
 for name in ['index.html','port.css','port.js']:
     shutil.copyfile(ROOT/'assets'/'workshop'/name,work/name)
 (work/'index.html').write_text((work/'index.html').read_text().replace('__ENTRY__',entry))
-path=ROOT/'assets/workshop/site.zip'
-with zipfile.ZipFile(path,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+path=ROOT/'assets/workshop/site.zip';pending=ROOT/'build/workshop-pending.zip'
+with zipfile.ZipFile(pending,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
     for p in sorted(work.rglob('*')):
         if p.is_file():
             rel=str(p.relative_to(work));info=zipfile.ZipInfo(rel,(2026,1,1,0,0,0));info.compress_type=zipfile.ZIP_DEFLATED;info.external_attr=0o100644<<16;z.writestr(info,p.read_bytes())
+with zipfile.ZipFile(pending) as z:assert z.testzip() is None
+pending.replace(path)
 (ROOT/'assets/workshop/bundle.json').write_text(json.dumps({'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'sizeBytes':path.stat().st_size,'entry':entry},indent=2))
 print('Local module archive:',path.stat().st_size,'bytes',flush=True)

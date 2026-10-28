@@ -8,6 +8,7 @@ import android.widget.*;
 
 public final class MainActivity extends Activity {
  private AppView view;private FrameLayout root,mainPane;private android.view.View navigation;private final ModuleTabs<android.view.View> pages=new ModuleTabs<>();
+ private android.view.View navigationPanel;private android.animation.ValueAnimator drawerAnimator;private boolean navigationClosing=false,edgeCandidate=false,drawerDragging=false,drawerStartedOpen=false;private float edgeX,edgeY;
  private boolean startPending=false,installPending=false,permissionPending=false,notificationPending=false,notificationPrompted=false,destroyed=false;
  private final Handler handler=new Handler(Looper.getMainLooper());private final OverlayStartGate startGate=new OverlayStartGate();private Runnable timeout;
  @Override public void onCreate(Bundle b){
@@ -23,12 +24,21 @@ public final class MainActivity extends Activity {
  private TextView navText(String text,int size,int color){TextView v=new TextView(this);v.setText(text);v.setTextSize(size);v.setTextColor(color);return v;}
  void showSection(String id){
   if(destroyed||!SiteModules.valid(id))return;for(android.view.View p:pages.values())if(p instanceof WorkshopView)((WorkshopView)p).persist();closeNavigation();
-  try{android.view.View target=pages.select(id,key->{WorkshopView module=new WorkshopView(this,key,this::openNavigation,()->showSection(SiteModules.HOME));try{root.addView(module,new FrameLayout.LayoutParams(-1,-1));}catch(RuntimeException e){module.dispose();throw e;}return module;});for(android.view.View page:pages.values())page.setVisibility(page==target?android.view.View.VISIBLE:android.view.View.GONE);}
+  try{android.view.View target=pages.select(id,key->{WorkshopView module=new WorkshopView(this,key,this::openNavigation,()->showSection(SiteModules.HOME));try{root.addView(module,new FrameLayout.LayoutParams(-1,-1));}catch(RuntimeException e){module.dispose();throw e;}return module;});for(android.view.View page:pages.values()){page.animate().cancel();page.setAlpha(1f);page.setTranslationX(0);page.setVisibility(page==target?android.view.View.VISIBLE:android.view.View.GONE);}if(android.animation.ValueAnimator.areAnimatorsEnabled()){target.setAlpha(0);target.setTranslationX(dp(14));target.animate().alpha(1f).translationX(0).setDuration(240).setInterpolator(new android.view.animation.DecelerateInterpolator()).start();}if(navigation!=null)navigation.bringToFront();}
   catch(RuntimeException ex){Toast.makeText(this,"模块未能打开，请重试",Toast.LENGTH_LONG).show();}
  }
- private void closeNavigation(){if(navigation!=null){root.removeView(navigation);navigation=null;}}
- void openNavigation(){
-  if(destroyed||navigation!=null)return;
+ private void stopDrawerAnimation(){if(drawerAnimator!=null){drawerAnimator.removeAllListeners();drawerAnimator.cancel();drawerAnimator=null;}}
+ private void closeNavigationNow(){stopDrawerAnimation();if(navigation!=null)root.removeView(navigation);navigation=null;navigationPanel=null;navigationClosing=false;}
+ private void drawerProgress(float progress){if(navigation==null||navigationPanel==null)return;float p=Math.max(0,Math.min(1,progress));navigationPanel.setTranslationX(-navigationPanel.getLayoutParams().width*(1-p));navigation.setBackgroundColor(android.graphics.Color.argb(Math.round(153*p),0,0,0));}
+ private float drawerProgress(){return navigationPanel==null?0:1+navigationPanel.getTranslationX()/navigationPanel.getLayoutParams().width;}
+ private void animateDrawer(boolean open){if(navigation==null)return;stopDrawerAnimation();navigationClosing=!open;final android.view.View shade=navigation;float from=drawerProgress(),to=open?1:0;
+  if(!android.animation.ValueAnimator.areAnimatorsEnabled()){drawerProgress(to);if(!open)closeNavigationNow();return;}
+  drawerAnimator=android.animation.ValueAnimator.ofFloat(from,to);drawerAnimator.setDuration(Math.max(100,Math.round(250*Math.abs(to-from))));drawerAnimator.setInterpolator(new android.view.animation.DecelerateInterpolator());drawerAnimator.addUpdateListener(a->drawerProgress((Float)a.getAnimatedValue()));drawerAnimator.addListener(new android.animation.AnimatorListenerAdapter(){@Override public void onAnimationEnd(android.animation.Animator a){if(!open&&navigation==shade)closeNavigationNow();}});drawerAnimator.start();
+ }
+ private void closeNavigation(){animateDrawer(false);}
+ void openNavigation(){openNavigation(true);}
+ private void openNavigation(boolean animate){
+  if(destroyed)return;if(navigation!=null){if(navigationClosing)closeNavigationNow();else return;}
   FrameLayout shade=new FrameLayout(this);shade.setBackgroundColor(0x99000000);shade.setOnClickListener(v->closeNavigation());
   ScrollView scroll=new ScrollView(this);scroll.setFillViewport(true);scroll.setBackground(surface(0xff172a36,0x449ed6c5));scroll.setOnClickListener(v->{});
   LinearLayout column=new LinearLayout(this);column.setOrientation(LinearLayout.VERTICAL);column.setPadding(dp(18),dp(20),dp(18),dp(18));column.setClickable(true);scroll.addView(column,new ScrollView.LayoutParams(-1,-1));
@@ -37,7 +47,7 @@ public final class MainActivity extends Activity {
   String[] ids={SiteModules.HOME,SiteModules.SIMULATOR,SiteModules.DATABASE};String[] symbols={"◇","▦","▤"};String[] descriptions={"按棋手与本局禁用匹配", "英雄、装备与站位编排", "英雄、装备、棋手与更多资料"};
   for(int i=0;i<ids.length;i++){final String id=ids[i];boolean selected=id.equals(pages.selected());LinearLayout row=new LinearLayout(this);row.setGravity(android.view.Gravity.CENTER_VERTICAL);row.setPadding(dp(13),dp(13),dp(10),dp(13));row.setBackground(surface(selected?0x209ee1cc:0x08ffffff,selected?0x669ee1cc:0x18ffffff));TextView icon=navText(symbols[i],24,selected?0xffa2e8d0:0xff9cb8bd);row.addView(icon,new LinearLayout.LayoutParams(dp(37),-2));LinearLayout label=new LinearLayout(this);label.setOrientation(LinearLayout.VERTICAL);label.addView(navText(SiteModules.title(id),15,selected?0xffa2e8d0:0xffedf5f1));TextView note=navText(descriptions[i],10,0xff94b0b8);note.setPadding(0,dp(5),0,0);label.addView(note);row.addView(label,new LinearLayout.LayoutParams(0,-2,1));row.setContentDescription(SiteModules.title(id)+(selected?"，当前页面":""));row.setOnClickListener(v->showSection(id));LinearLayout.LayoutParams rp=new LinearLayout.LayoutParams(-1,-2);rp.bottomMargin=dp(10);column.addView(row,rp);}
   TextView note=navText("离线摆阵容、查基础资料，联网时自动同步更新。方案保存在本机，也可以导出和导入。",11,0xff8eafb5);note.setLineSpacing(dp(4),1f);LinearLayout.LayoutParams np=new LinearLayout.LayoutParams(-1,-2);np.topMargin=dp(20);column.addView(note,np);TextView credit=navText("软件由 ChatGPT 构建 · "+BuildInfo.VERSION_NAME,10,0xff73919c);credit.setPadding(0,dp(25),0,0);column.addView(credit);
-  int width=Math.min(dp(300),Math.max(dp(220),getResources().getDisplayMetrics().widthPixels-dp(48)));shade.addView(scroll,new FrameLayout.LayoutParams(width,-1,android.view.Gravity.LEFT));navigation=shade;root.addView(navigation,new FrameLayout.LayoutParams(-1,-1));
+  int width=Math.min(dp(300),Math.max(dp(220),getResources().getDisplayMetrics().widthPixels-dp(48)));shade.addView(scroll,new FrameLayout.LayoutParams(width,-1,android.view.Gravity.LEFT));navigation=shade;navigationPanel=scroll;navigationClosing=false;root.addView(navigation,new FrameLayout.LayoutParams(-1,-1));drawerProgress(0);if(animate)animateDrawer(true);
  }
  @Override protected void onStart(){super.onStart();if(!startPending&&!installPending){Repository.get(this).resetRound(true);Repository.get(this).checkUpdates();Repository.get(this).updater.check();}}
  void requestOverlay(){if(startPending)return;startPending=true;if(Settings.canDrawOverlays(this)){notificationThenStart();return;}permissionPending=true;Toast.makeText(this,"请允许显示在其他应用上层，然后返回软件",Toast.LENGTH_LONG).show();try{startActivityForResult(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,Uri.parse("package:"+getPackageName())),42);}catch(RuntimeException e){permissionPending=false;startPending=false;Toast.makeText(this,"请在系统设置中手动开启悬浮窗权限",Toast.LENGTH_LONG).show();}}
@@ -55,7 +65,20 @@ public final class MainActivity extends Activity {
  @Override protected void onResume(){super.onResume();if(installPending){installPending=false;if(getPackageManager().canRequestPackageInstalls())installUpdate();}}
  void installUpdate(){if(!Repository.get(this).updater.canInstall()){Toast.makeText(this,"请先下载并校验更新",Toast.LENGTH_SHORT).show();return;}try{if(!getPackageManager().canRequestPackageInstalls()){installPending=true;Toast.makeText(this,"请允许本应用安装更新，然后返回",Toast.LENGTH_LONG).show();startActivity(new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,Uri.parse("package:"+getPackageName())));return;}Intent i=new Intent(Intent.ACTION_VIEW).setDataAndType(Uri.parse("content://"+getPackageName()+".updates/update.apk"),"application/vnd.android.package-archive").addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);i.setClipData(android.content.ClipData.newRawUri("软件更新",i.getData()));startActivity(i);}catch(Exception e){installPending=false;Toast.makeText(this,"无法打开系统安装器："+e.getMessage(),Toast.LENGTH_LONG).show();}}
  @Override protected void onNewIntent(Intent i){super.onNewIntent(i);setIntent(i);if(i.getBooleanExtra("startOverlay",false)){i.removeExtra("startOverlay");requestOverlay();}}
- @Override public void onConfigurationChanged(android.content.res.Configuration c){super.onConfigurationChanged(c);if(navigation!=null){closeNavigation();root.post(this::openNavigation);}}
- @Override protected void onDestroy(){destroyed=true;cancelOverlayStart();handler.removeCallbacksAndMessages(null);closeNavigation();for(android.view.View page:pages.values())if(page instanceof WorkshopView)((WorkshopView)page).dispose();pages.clear();if(view!=null){view.dispose();view=null;}super.onDestroy();}
+ @Override public void onConfigurationChanged(android.content.res.Configuration c){super.onConfigurationChanged(c);if(navigation!=null){closeNavigationNow();root.post(this::openNavigation);}}
+ @Override protected void onDestroy(){destroyed=true;cancelOverlayStart();handler.removeCallbacksAndMessages(null);closeNavigationNow();for(android.view.View page:pages.values())if(page instanceof WorkshopView)((WorkshopView)page).dispose();pages.clear();if(view!=null){view.dispose();view=null;}super.onDestroy();}
+ /** Edge gestures are intercepted only after horizontal intent; board/vertical gestures elsewhere stay with the page. */
+ @Override public boolean dispatchTouchEvent(android.view.MotionEvent e){
+  int action=e.getActionMasked();if(action==android.view.MotionEvent.ACTION_DOWN){edgeX=e.getX();edgeY=e.getY();drawerStartedOpen=navigation!=null&&!navigationClosing;edgeCandidate=drawerStartedOpen||edgeX<=root.getPaddingLeft()+dp(24);drawerDragging=false;}
+  if(e.getPointerCount()>1)edgeCandidate=false;
+  if(action==android.view.MotionEvent.ACTION_MOVE&&edgeCandidate){float dx=e.getX()-edgeX,dy=e.getY()-edgeY;
+   if(!drawerDragging){if(Math.abs(dy)>dp(12)&&Math.abs(dy)>Math.abs(dx)){edgeCandidate=false;}else if(Math.abs(dx)>dp(12)&&Math.abs(dx)>Math.abs(dy)*1.4f&&(drawerStartedOpen?dx<0:dx>0)){
+    drawerDragging=true;if(!drawerStartedOpen)openNavigation(false);stopDrawerAnimation();android.view.MotionEvent cancel=android.view.MotionEvent.obtain(e);cancel.setAction(android.view.MotionEvent.ACTION_CANCEL);super.dispatchTouchEvent(cancel);cancel.recycle();
+   }}
+   if(drawerDragging&&navigationPanel!=null){float width=navigationPanel.getLayoutParams().width;drawerProgress((drawerStartedOpen?1:0)+dx/width);return true;}
+  }
+  if((action==android.view.MotionEvent.ACTION_UP||action==android.view.MotionEvent.ACTION_CANCEL)&&drawerDragging){float p=drawerProgress();animateDrawer(action==android.view.MotionEvent.ACTION_CANCEL?drawerStartedOpen:drawerStartedOpen?p>.7f:p>.3f);edgeCandidate=false;drawerDragging=false;return true;}
+  return super.dispatchTouchEvent(e);
+ }
  @Override public void onBackPressed(){if(navigation!=null){closeNavigation();return;}if(!SiteModules.HOME.equals(pages.selected())){android.view.View current=pages.select(pages.selected(),key->null);if(current instanceof WorkshopView&&((WorkshopView)current).back())return;showSection(SiteModules.HOME);return;}if(view!=null)view.evaluateJavascript("window.App.back()",null);else super.onBackPressed();}
 }

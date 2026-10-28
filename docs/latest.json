@@ -1,12 +1,12 @@
 {
   "packageName": "com.doudou.wxq",
-  "versionCode": 19,
-  "versionName": "0.1.18",
-  "apkUrl": "https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.18/WanxiangCompanion-0.1.18.apk",
+  "versionCode": 20,
+  "versionName": "0.1.19",
+  "apkUrl": "https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.19/WanxiangCompanion-0.1.19.apk",
   "apkFallbackUrls": [
-    "https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.18.apk"
+    "https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.19.apk"
   ],
-  "sha256": "45b9bde1009746be39f5965c1767de947bb1f119c12e2ff2249cdd9c7aac08f0",
-  "sizeBytes": 9271256,
-  "notes": "1. 阵容模拟与万象资料库统一为首页的薄荷绿、深色渐变和磨砂卡片风格，调整顶部工具栏、标题、搜索框、筛选及选中状态。\n2. 移除模拟器和资料库原站的顶部、底部及“更多”导航，取消原导航的底部占位。\n3. 修复站内路由可跳到网站其他页面的问题；页面、链接与路由均限制在当前模块，软件功能统一从左上角侧边栏切换。\n4. 保留离线资料、本地方案、触摸摆阵、装备穿戴与图片导出，源码随版本同步发布。"
+  "sha256": "6d014de0b329dadfe386bd037182a9748abbfecf4367c220750e39a6bae061db",
+  "sizeBytes": 9463768,
+  "notes": "1. 模拟器、资料库的顶部并入本地页面，与正文共享连续背景，修复顶部衔接生硬的问题，方案菜单也统一为软件风格。\n2. 阵容图改为捕获实际棋盘，按浅色参考图导出完整站位、头像、装备及棋手/天赋牌区域；补齐特殊单位图片，修复机械仆从等头像遗漏。\n3. 首页移除中间的更新跳转箭头，将设置按钮改为齿轮；软件更新仍可在设置内操作。\n4. 侧边栏增加左侧滑出与跟手拖动：左边缘右滑展开、向左滑收起；主功能、设置、详情和弹层增加短过渡动效。\n5. 沿用原签名覆盖升级，安装包和源码同步发布。"
 }

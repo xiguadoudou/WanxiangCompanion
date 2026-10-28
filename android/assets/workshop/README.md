@@ -9,3 +9,5 @@ The app loads only the packaged code under Android's virtual app-asset origin. I
 Reproduce: run `python3 tools/build_local_modules.py --json-jar <org.json.jar>` from android/. After editing adapters, use `python3 tools/repack_workshop.py`. The port ZIP is source material, not an archive of the private signing workspace.
 
 0.1.18: app-owned mint/glass theme replaces the two website shell themes. Both shell navigation sets are hidden and inert; Vue router, links, History and Android module ownership checks restrict navigation to the active module. Queries remain available for drafts and library filters.
+
+0.1.19: the local HTML toolbar shares the document backdrop. Fixed app actions and PNG saving use separate restricted prompt handlers. Board export captures the real board DOM with the bundled MIT html2canvas library, includes commander/talent sections and preserves loaded image elements. Special-unit images are bundled by tools/cache_special_images.py.

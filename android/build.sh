@@ -32,6 +32,13 @@ import shutil
 for path in ['build/classes','build/dex','build/generated']:shutil.rmtree(path,ignore_errors=True)
 PY
 mkdir -p build/classes build/dex build/generated dist
+python3 - <<'PY_WORKSHOP'
+from pathlib import Path
+import json,hashlib,zipfile
+p=Path('assets/workshop/site.zip');manifest=json.loads(Path('assets/workshop/bundle.json').read_text())
+assert p.stat().st_size==manifest['sizeBytes'] and hashlib.sha256(p.read_bytes()).hexdigest()==manifest['sha256'], 'Local workshop bundle is incomplete or changed; repack it before building'
+with zipfile.ZipFile(p) as z:assert z.testzip() is None, 'Invalid local workshop archive'
+PY_WORKSHOP
 "$WXQ_BT/aapt2" compile --dir res -o build/resources.zip
 "$WXQ_BT/aapt2" link -o build/resources.apk -I "$WXQ_PLATFORM" --manifest AndroidManifest.xml --java build/generated -A assets build/resources.zip
 python3 - <<'PY'

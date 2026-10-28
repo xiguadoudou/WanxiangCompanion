@@ -87,12 +87,13 @@
   $('softwareNotes').textContent=e.notes||'';$('softwareNotes').hidden=!e.notes;
   $('softwareProgress').hidden=e.state!=='downloading';$('softwareProgress').value=e.progress||0;
   $('checkSoftware').disabled=active;$('downloadSoftware').hidden=!e.available||e.downloadReady;$('downloadSoftware').disabled=active;
-  $('installSoftware').hidden=!e.downloadReady;$('updateButton').textContent=e.available?'↑ •':'↑';
+  $('installSoftware').hidden=!e.downloadReady;$('settingsButton').classList.toggle('has-update',!!e.available);
   if($('updateDialog').open){if(e.state==='current')closeUpdateDialog();else renderUpdateDialog(e);}
   maybeShowUpdateDialog(e,manualUpdateCheck);
   if(['available','ready','current','error'].includes(e.state))manualUpdateCheck=false;
  }
- function setSettings(value){settings=value;$('settings').classList.toggle('open',value);$('recommendation').style.display=value?'none':'';window.scrollTo(0,0);}
+ function closeDetail(){const d=$('drawer');if(!d.classList.contains('open'))return;if(matchMedia('(prefers-reduced-motion: reduce)').matches){d.classList.remove('open');return;}d.animate([{opacity:1,transform:'none'},{opacity:0,transform:'translateY(10px)'}],{duration:160,easing:'ease-in'}).finished.then(()=>d.classList.remove('open'));}
+ function setSettings(value){settings=value;$('settings').classList.toggle('open',value);$('recommendation').style.display=value?'none':'';window.scrollTo(0,0);const target=value?$('settings'):$('recommendation');if(!matchMedia('(prefers-reduced-motion: reduce)').matches)target.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:240,easing:'ease-out'});}
  window.App={
   receive(e){
    switch(e.type){
@@ -128,7 +129,7 @@
      if(!data&&ui.commanderId)$('results').innerHTML='<div class="empty glass"><b>暂时无法连接数据源</b>'+esc(e.message)+'</div>';break;
    }
   },
-  back(){if($('updateDialog').open)closeUpdateDialog();else if($('drawer').classList.contains('open'))$('drawer').classList.remove('open');else if(settings)setSettings(false);else if(overlay)cmd('minimize');else cmd('background');}
+  back(){if($('updateDialog').open)closeUpdateDialog();else if($('drawer').classList.contains('open'))closeDetail();else if(settings)setSettings(false);else if(overlay)cmd('minimize');else cmd('background');}
  };
  $('commanderButton').onclick=()=>toggleDropdown(!$('commanders').classList.contains('open'));
  $('clearBans').onclick=()=>{ui.bans=[];renderBans();save();request();};
@@ -139,7 +140,6 @@
  document.querySelectorAll('[data-days]').forEach(b=>b.onclick=()=>{ui.days=+b.dataset.days;renderStyle();save();request();});
  document.querySelectorAll('[data-min]').forEach(b=>b.onclick=()=>{ui.minCount=+b.dataset.min;renderStyle();save();request();});
  $('refresh').onclick=()=>{$('refresh').classList.add('busy-refresh');cmd('refresh');if(ui.commanderId)request();};
- $('updateButton').onclick=()=>{setSettings(true);$('softwareCard').scrollIntoView({behavior:'smooth',block:'center'});};
  $('downloadPage').onclick=()=>cmd('downloadPage');
  $('checkSoftware').onclick=()=>{manualUpdateCheck=true;cmd('checkSoftwareUpdate');};$('downloadSoftware').onclick=()=>cmd('downloadSoftwareUpdate');$('installSoftware').onclick=()=>cmd('installSoftwareUpdate');
  $('updateLater').onclick=closeUpdateDialog;
@@ -148,7 +148,7 @@
  $('updateDownloadNow').onclick=()=>{if(softwareState.downloadReady){closeUpdateDialog();cmd('installSoftwareUpdate');}else{renderUpdater({state:'downloading',message:'准备从 GitHub 下载…',progress:0});cmd('downloadSoftwareUpdate');}};
  $('start').onclick=$('settingsStart').onclick=()=>cmd('start');$('stop').onclick=()=>cmd('stop');
  $('source').onclick=()=>cmd('source');$('next').onclick=$('newRound').onclick=newRound;
- $('closeDetail').onclick=()=>$('drawer').classList.remove('open');
+ $('closeDetail').onclick=closeDetail;
  document.addEventListener('error',e=>{if(e.target.tagName!=='IMG')return;if(e.target.dataset.faction){const local=L.bundledFactionImage(e.target.dataset.faction);if(local&&e.target.getAttribute('src')!==local)e.target.src=local;else{e.target.hidden=true;e.target.nextElementSibling.hidden=false;}}else if(e.target.src!==fallbackAvatar)e.target.src=fallbackAvatar;},true);
  if(window.Native){try{App.receive(JSON.parse(Native.initialState()));}catch(e){status('界面初始化失败，请重新打开应用','error');}}
  else{renderBans();renderCommander();renderStyle();status('界面预览 · 实际数据在安卓 App 中同步');}

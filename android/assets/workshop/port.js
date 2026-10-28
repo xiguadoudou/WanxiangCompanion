@@ -9,6 +9,16 @@ for(const method of ['pushState','replaceState']){const original=history[method]
 document.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('a[href]');if(a&&!ownsUrl(a.href)){e.preventDefault();e.stopImmediatePropagation();navigationNote();}},true);
 window.open=()=>{navigationNote();return null;};
 const shellNavigation='.ep-header,.ep-bottom-nav,.ep-mobile-more,.ep-mobile-more__backdrop,.h5-header,.h5-bottom-nav,.h5-tabbar,.site-footer,.ep-footer,.app-footer';
+const header=document.createElement('header');header.className='wxq-app-header';
+header.innerHTML=`<div class="wxq-brand"><button class="wxq-app-mark" data-action="navigation" aria-label="打开功能侧边栏"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div><strong>万象弈伴</strong><small id="wxq-module-status">${database?'万象资料库':'阵容模拟'} · 本地可用</small></div></div><div class="wxq-header-tools">${database?'':'<button class="wxq-tool wxq-plan-trigger" aria-label="阵容方案" aria-expanded="false">方案</button>'}<button class="wxq-tool" data-action="refresh" aria-label="同步资料并刷新"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 4v6h-6M20 10a8 8 0 1 0 0 5"/></svg></button><button class="wxq-tool" data-action="home" aria-label="返回阵容推荐"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button></div>`;
+const app=document.getElementById('app');app.before(header);document.body.dataset.module=database?'database':'simulator';
+function appAction(action){window.prompt('__WXQ_APP_ACTION__',action);}
+header.addEventListener('click',e=>{const b=e.target.closest('button[data-action]');if(b)appAction(b.dataset.action);});
+if(!database){
+ const trigger=header.querySelector('.wxq-plan-trigger'),menu=document.createElement('div');menu.className='wxq-plan-menu';menu.hidden=true;menu.setAttribute('role','menu');
+ for(const [action,label] of [['save','保存当前方案'],['open','打开已保存方案'],['copy','复制软件方案码'],['import','导入软件方案码'],['export','保存阵容图'],['export-strip','保存横向图']]){const b=document.createElement('button');b.textContent=label;b.setAttribute('role','menuitem');b.onclick=()=>{menu.hidden=true;trigger.setAttribute('aria-expanded','false');if(action.startsWith('export'))exportImage(action==='export-strip');else appAction(action);};menu.appendChild(b);}
+ header.appendChild(menu);trigger.onclick=()=>{menu.hidden=!menu.hidden;trigger.setAttribute('aria-expanded',String(!menu.hidden));};document.addEventListener('click',e=>{if(!header.contains(e.target)){menu.hidden=true;trigger.setAttribute('aria-expanded','false');}});
+}
 let guardedRouter;
 function integrate(){
  document.querySelectorAll(shellNavigation).forEach(el=>{el.hidden=true;el.setAttribute('inert','');el.setAttribute('aria-hidden','true');});
@@ -19,18 +29,47 @@ function integrate(){
 }
 new MutationObserver(integrate).observe(document.getElementById('app'),{childList:true,subtree:true});integrate();
 document.addEventListener('error',e=>{const img=e.target;if(img.tagName!=='IMG')return;e.stopImmediatePropagation();if(img.dataset.wxqFallback)return;img.dataset.wxqFallback='1';const label=(img.alt||'弈').slice(0,2).replace(/[<>&"']/g,'');img.src='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="72" height="72"><rect width="72" height="72" rx="12" fill="#253c43"/><text x="36" y="44" text-anchor="middle" font-size="24" fill="#b7d4c8">'+label+'</text></svg>');},true);
-const pictures=new Map();function image(url){if(!url)return Promise.resolve(null);if(!pictures.has(url))pictures.set(url,new Promise(resolve=>{const i=new Image();i.crossOrigin='anonymous';i.onload=()=>resolve(i);i.onerror=()=>resolve(null);i.src=url;}));return pictures.get(url);}
+let exporting=false;
 async function exportImage(horizontal=false,transparent=false){
- const raw=new URL(location.href).searchParams.get('lineup');if(!raw)throw Error('先向棋盘添加英雄');
- const plan=JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(raw.replace(/-/g,'+').replace(/_/g,'/')),c=>c.charCodeAt(0))));
- const arrays=window.__WXQ_DATA__.arrays,heroes=new Map([...arrays.wanxiang_hero,...(arrays.specialHeroes||[])].map(h=>[String(h.id),h])),items=new Map([...arrays.wanxiang_equipment,...(arrays.diamond_equipment||[])].map(h=>[String(h.id),h]));
- const units=plan.b.map((u,i)=>u?{u,i}:null).filter(Boolean);if(!units.length)throw Error('棋盘上还没有英雄');
- const enemy=!horizontal&&units.some(x=>x.i>=28),canvas=document.createElement('canvas');canvas.width=horizontal?Math.max(360,units.length*116+32):1120;canvas.height=horizontal?206:enemy?1190:660;const ctx=canvas.getContext('2d');
- if(!transparent){ctx.fillStyle='#101a27';ctx.fillRect(0,0,canvas.width,canvas.height);}ctx.fillStyle='#e4ece7';ctx.font='bold 25px system-ui';ctx.textAlign='left';ctx.fillText('万象弈伴 · 阵容方案',22,38);ctx.font='13px system-ui';ctx.fillStyle='#9fb4b7';ctx.fillText('资料来源：万象棋大数据',22,60);
- async function unit(entry,x,y,size){const h=heroes.get(String(entry.u[0])),a=h?.assets||{},portrait=await image(a.avatar||a.thumbnail||a.image);ctx.fillStyle='#293b4a';ctx.fillRect(x,y,size,size);if(portrait)ctx.drawImage(portrait,x,y,size,size);ctx.fillStyle='#edf5ef';ctx.textAlign='center';ctx.font='bold 15px system-ui';ctx.fillText(h?.name||'特殊单位',x+size/2,y+size+19);const equipment=entry.u[1]||[];for(let j=0;j<equipment.length;j++){const item=items.get(String(equipment[j])),icon=await image(item?.assets?.thumbnail||item?.assets?.image);const ix=x+j*(size/3+1),iy=y+size+27;if(icon)ctx.drawImage(icon,ix,iy,size/3-2,size/3-2);}ctx.textAlign='left';}
- if(horizontal){for(let k=0;k<units.length;k++)await unit(units[k],20+k*116,79,72);}
- else{const shown=enemy?56:28;for(let k=0;k<shown;k++){const side=Math.floor(k/28),cell=k%28,row=Math.floor(cell/7),col=cell%7,x=76+col*134+(row%2)*54,y=91+side*530+row*126;ctx.fillStyle='#202e40';ctx.fillRect(x,y,112,112);const u=units.find(e=>e.i===k);if(u)await unit(u,x+20,y+4,72);}}
- const value=canvas.toDataURL('image/png');if(window.prompt('__WXQ_EXPORT_PNG__',value)!=='ok')throw Error('图片保存未完成');return value;
+ if(exporting)return;exporting=true;let stage;
+ try{
+  const raw=new URL(location.href).searchParams.get('lineup');if(!raw)throw Error('请先添加英雄、棋手或天赋牌');
+  const manifest=await(await fetch('/port-manifest.json')).json();
+  // Reuse the packaged capture library and the actual board DOM, including
+  // special units, equipment, backups, players and talents. Never re-layout data.
+  const {h:capture}=await import('/assets/'+manifest.desktop);
+  const board=document.querySelector('.board-capture-shell');if(!board)throw Error('棋盘尚未就绪');
+  let target=board;
+  if(horizontal){
+   target=board.querySelector('.simple-simulator-map-wrapper');
+   if(!target){
+    const units=[...board.querySelectorAll('.simulator-map .map-item-wrapper')].filter(e=>e.querySelector('.hero-icon__portrait'));
+    if(!units.length)throw Error('请先向棋盘添加英雄');
+    stage=document.createElement('div');stage.className='board-capture-shell main-wrapper wxq-horizontal-export';stage.style.cssText='position:absolute;left:-10000px;top:0;width:max-content;padding:5px';
+    const row=document.createElement('div');row.className='simulator-map';row.style.cssText='display:flex;gap:4px;width:max-content;height:50px;padding:0;margin:0';
+    for(const unit of units){const clone=unit.cloneNode(true);clone.style.cssText='position:relative;display:block;width:40px;height:50px;margin:0';row.appendChild(clone);}
+    stage.appendChild(row);document.body.appendChild(stage);target=stage;
+   }
+  }
+  await document.fonts.ready;
+  const pending=[...target.querySelectorAll('img')].filter(i=>!i.complete);
+  await Promise.all(pending.map(i=>new Promise(resolve=>{i.addEventListener('load',resolve,{once:true});i.addEventListener('error',resolve,{once:true});setTimeout(resolve,6000);})));
+  const canvas=await capture(target,{useCORS:true,allowTaint:false,backgroundColor:transparent?null:'#f7f9fc',scale:2,logging:false,onclone:doc=>{
+   const css=doc.createElement('style');css.textContent=`
+    .board-capture-shell{--simulator-grid-bg:#edf2f7!important;--champion-background-color:#edf2f7!important;--simulator-cell-bg:#edf2f7!important;background:${transparent?'transparent':'#f7f9fc'}!important;color:#909399!important}
+    .board-capture-shell *{animation:none!important;transition:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+    html.dark .wxq-horizontal-export{border:0!important;border-radius:0!important;box-shadow:none!important;background:${transparent?'transparent':'#f7f9fc'}!important}
+    .board-capture-shell .simulator-map,.board-capture-shell .simulator-mobile-side-panels,.board-capture-shell .simulator-mobile-side-panel{background:transparent!important}
+    .board-capture-shell .map-item-hero{background:transparent!important}
+    .board-capture-shell .map-item{background:#edf2f7!important}
+    .board-capture-shell .simulator-mobile-selection-grid{background:${transparent?'transparent':'#f7f9fc'}!important;border:1px solid #e4e7ed!important;box-shadow:none!important}
+    .board-capture-shell .simulator-mobile-side-title,.board-capture-shell .simulator-selected-title{color:#909399!important}
+    .board-capture-shell .simulator-player-item,.board-capture-shell .simulator-selected-talent-item{background:#eef2f6!important;border-color:#e4e7ed!important}
+    .board-capture-shell .simulator-player-name,.board-capture-shell .simulator-selected-talent-name{color:#596773!important;overflow:visible!important;min-height:18px;line-height:18px}
+   `;doc.head.appendChild(css);
+  }});
+  const value=canvas.toDataURL('image/png');if(window.prompt('__WXQ_EXPORT_PNG__',value)!=='ok')throw Error('图片保存未完成');return value;
+ }catch(e){window.alert(e.message);}finally{if(stage)stage.remove();exporting=false;}
 }
-window.WxqLocalPort={exportImage:(horizontal,transparent)=>exportImage(horizontal,transparent).catch(e=>window.alert(e.message))};
+window.WxqLocalPort={exportImage};
 })();
