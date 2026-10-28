@@ -1,6 +1,6 @@
 package com.doudou.wxq;
 final class BuildInfo {
- static final int VERSION_CODE=14;
- static final String VERSION_NAME="0.1.13";
+ static final int VERSION_CODE=15;
+ static final String VERSION_NAME="0.1.14";
  static final String UPDATE_URL="https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/latest.json";
 }

@@ -1,10 +1,14 @@
 # 万象弈伴 · GitHub 更新
 
-Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.13**，包名 `com.doudou.wxq`，版本号 14。
+Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.14**，包名 `com.doudou.wxq`，版本号 15。
 
-[查看 Android 源码](android/) · [下载当前源码包](https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.13/WanxiangCompanion-0.1.13-source.zip)
+[查看 Android 源码](android/) · [下载当前源码包](https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.14/WanxiangCompanion-0.1.14-source.zip)
 
-[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.13.apk)
+[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.14.apk)
+
+## 0.1.14 长条触摸滑动
+
+修正装备列拦截横向手势的问题，从头像、英雄名和装备区域开始都能左右滑动查看后方角色；增加移动端实际触摸手势回归检查。
 
 ## 0.1.13 固定阵容长条
 

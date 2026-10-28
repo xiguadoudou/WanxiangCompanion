@@ -80,7 +80,7 @@ button:active{filter:brightness(1.2)}img{user-select:none}[hidden]{display:none!
 .strip-hero{display:flex;flex-direction:column;align-items:center;gap:1px;margin-bottom:2px}
 .strip-hero>img{height:26px;width:26px;object-fit:cover;border:1px solid #a2e8d036;border-radius:5px}
 .strip-hero strong{font-size:10px;line-height:13px;font-weight:550;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#edf5f1}
-.strip-equipment{max-height:42px;overflow-y:auto;scrollbar-width:none;touch-action:pan-y;overscroll-behavior:contain}
+.strip-equipment{max-height:42px;overflow-y:auto;scrollbar-width:none;touch-action:pan-x pan-y;overscroll-behavior-y:contain}
 .strip-item{display:flex;align-items:center;gap:3px;height:14px;min-width:0;font-size:9px;line-height:14px;color:#e0cfac;white-space:nowrap}
 .strip-item>img{height:12px;width:12px;flex-shrink:0;object-fit:cover;border-radius:3px}
 .strip-item>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

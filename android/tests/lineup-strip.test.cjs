@@ -3,7 +3,7 @@ const fs=require('fs'),assert=require('node:assert/strict'),{pathToFileURL}=requ
 (async()=>{
  const browser=await chromium.launch({executablePath:process.env.WXQ_BROWSER_PATH,args:['--no-sandbox']});
  try{
-  const page=await browser.newPage({viewport:{width:560,height:280}});const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.route('https://**/*',r=>r.abort());
+  const page=await browser.newPage({viewport:{width:560,height:280},isMobile:true,hasTouch:true});const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.route('https://**/*',r=>r.abort());
   const f=JSON.parse(fs.readFileSync('tests/fixtures/copy-ui-fixture.json'));
   await page.addInitScript(f=>{window.sent=[];window.Native={initialState:()=>JSON.stringify({type:'init',catalog:f.catalog,data:f.data,prefs:{...f.data.query}}),command:x=>sent.push(JSON.parse(x))};},f);
   await page.goto(pathToFileURL(process.cwd()+'/assets/overlay.html').href);await page.waitForSelector('#pinLineup');await page.addStyleTag({content:'body{background:#111d2b}'});
@@ -23,6 +23,16 @@ const fs=require('fs'),assert=require('node:assert/strict'),{pathToFileURL}=requ
    // Last hero can be brought into view without making the overlay taller.
    await page.locator('#lineupStrip').evaluate(e=>e.scrollLeft=e.scrollWidth);
    const last=await page.locator('.strip-unit').last().boundingBox();assert.ok(last.x+last.width<=width-20+1);assert.ok(last.y+last.height<=height);
+  }
+  // Real touch gestures must work when the finger starts on either hero or item rows.
+  await page.setViewportSize({width:250,height:98});const touch=await page.context().newCDPSession(page);
+  for(const y of [20,50]){
+   await page.locator('#lineupStrip').evaluate(e=>e.scrollLeft=0);
+   if(y===50)assert.equal(await page.evaluate(()=>!!document.elementFromPoint(175,50).closest('.strip-equipment')),true);
+   await touch.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:175,y}]});
+   for(let x=160;x>=40;x-=15)await touch.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y}]});
+   await touch.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+   await page.waitForFunction(()=>document.getElementById('lineupStrip').scrollLeft>40,{timeout:1000});
   }
   const pinned=await page.locator('#lineupStrip').innerText();
   const changed=JSON.parse(JSON.stringify(f.data));changed.rows=changed.rows.slice(0,1);changed.rows[0].heroes[0].name='后台新阵容';

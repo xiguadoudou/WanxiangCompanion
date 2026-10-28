@@ -1,12 +1,12 @@
 {
   "packageName": "com.doudou.wxq",
-  "versionCode": 14,
-  "versionName": "0.1.13",
-  "apkUrl": "https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.13/WanxiangCompanion-0.1.13.apk",
+  "versionCode": 15,
+  "versionName": "0.1.14",
+  "apkUrl": "https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.14/WanxiangCompanion-0.1.14.apk",
   "apkFallbackUrls": [
-    "https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.13.apk"
+    "https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.14.apk"
   ],
-  "sha256": "aa0b295893f8a5626b3819e35006fff9d035537cd741aa95c2fe6da3d6f15541",
+  "sha256": "f1e5ad699186fa3e2fa4d15db403a19cbb585966ca90936acc8a7fc5e953c667",
   "sizeBytes": 103911,
-  "notes": "1. 选定阵容后点击“长条”，切换为仅显示英雄与各自推荐装备的精简悬浮条，隐藏筛选、排名、统计和其他详情。\n2. 每个英雄独立展示头像、名称和装备；横向排列，窗口较窄时可以左右滑动查看完整阵容。\n3. 长条固定当前阵容快照，后台刷新不会替换；左侧小图标支持拖动，点击恢复完整面板。\n4. 右下角可拖动调整长条宽度，完整面板原来的宽高独立保留；回到主程序和新一局时退出长条模式。\n5. 保留图片缓存、透明度、退出/返回软件、GitHub 加速更新与原签名覆盖升级，源码同步发布。"
+  "notes": "1. 新增长条模式：选好阵容点击详情标题旁“长条”，只显示这套阵容的英雄和各自装备，隐藏其他内容。\n2. 横向排列，窗口窄时左右滑动查看；修正装备区域对横向手势的限制，英雄区和装备区都可开始滑动。\n3. 固定当前阵容快照，后台刷新不会替换；拖动左侧小图标移动长条，点击恢复完整面板。\n4. 右下角可调整长条宽度，独立保留完整面板的大小；新一局或返回主程序时退出长条模式。\n5. 保留图片缓存、透明度、GitHub 加速下载与原签名覆盖安装，对应源码同步发布。"
 }
