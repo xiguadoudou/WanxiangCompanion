@@ -1,7 +1,7 @@
 package com.doudou.wxq;
 import org.json.*;
 public final class UpdateContractTest {
- static JSONObject manifest()throws Exception{return new JSONObject().put("packageName","com.doudou.wxq").put("versionCode",21).put("versionName","0.1.20").put("apkUrl","https://updates.example/release.apk").put("sha256",String.join("",java.util.Collections.nCopies(64,"a"))).put("sizeBytes",10000);}
+ static JSONObject manifest()throws Exception{return new JSONObject().put("packageName","com.doudou.wxq").put("versionCode",22).put("versionName","0.1.21").put("apkUrl","https://updates.example/release.apk").put("sha256",String.join("",java.util.Collections.nCopies(64,"a"))).put("sizeBytes",10000);}
  static void rejects(String field,Object value)throws Exception{JSONObject m=manifest().put(field,value);try{UpdateContract.validate(m);throw new AssertionError("Accepted invalid "+field);}catch(IllegalArgumentException expected){}}
  public static void main(String[] args)throws Exception{
   if(!UpdateContract.newer(UpdateContract.validate(manifest())))throw new AssertionError();

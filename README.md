@@ -1,10 +1,16 @@
 # 万象弈伴 · GitHub 更新
 
-Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.19**，包名 `com.doudou.wxq`，版本号 20。
+Android 8.0+ 的个人万象棋阵容参考工具。当前版本 **0.1.20**，包名 `com.doudou.wxq`，版本号 21。
 
-[查看 Android 源码](android/) · [下载当前源码包](https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.19/WanxiangCompanion-0.1.19-source.zip)
+[查看 Android 源码](android/) · [下载当前源码包](https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.20/WanxiangCompanion-0.1.20-source.zip)
 
-[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.19.apk)
+[下载最新安装包](https://github.com/xiguadoudou/WanxiangCompanion/releases/latest) · [GitHub 备用直接下载](https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.20.apk)
+
+## 0.1.20 搜索滚动、导出资源与全页左滑
+
+资料库搜索和筛选区取消吸顶，随正文正常滚出屏幕。修正 Android 本地资源规则遗漏导出配置 JSON 的问题，解决保存阵容图时的 Unexpected end of JSON input；浏览器离线检查改为直接采用 Android 的 WorkshopRoutes 白名单，验证实际可访问的导出依赖。
+
+按用户指定，改为在任意普通页面内容区域向左滑打开侧边栏，不再限制屏幕左边缘或要求右滑；菜单仍从左侧滑出。手势让出棋盘/英雄拖动、横向列表、筛选标签、滑块和输入框，并保留正常纵向滚动。实际触摸回归覆盖首页正文与资料卡左滑、滑块和列表排除、棋盘长距离左右拖动，以及搜索区滚出和完整图片导出。侧边栏打开后的原生左滑收起效果保留。
 
 ## 0.1.19 连续页面、棋盘导出与动效
 

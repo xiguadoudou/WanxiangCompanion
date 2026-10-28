@@ -91,7 +91,7 @@ html.dark .el-select-dropdown__item:hover,html.dark .el-select-dropdown__item.is
 .simulator-mobile-side-title,.simulator-awaken-tip{color:var(--muted)!important}
 .simulator-mobile-side-title{font-size:12px!important}
 .hero-name{color:#c2cdd0!important}.hero-list-label{color:var(--gold)!important}
-.h5-sticky-toolbar{top:0!important;background:#162630f2!important;backdrop-filter:blur(24px);border:1px solid var(--line);border-radius:20px;padding:12px!important;margin:0 0 14px!important;box-shadow:inset 0 1px 0 #ffffff09}
+.h5-sticky-toolbar{position:static!important;top:auto!important;background:#162630f2!important;backdrop-filter:blur(24px);border:1px solid var(--line);border-radius:20px;padding:12px!important;margin:0 0 14px!important;box-shadow:inset 0 1px 0 #ffffff09}
 .h5-db-tabs{gap:5px!important;border:0!important;background:transparent!important;padding:0 0 10px!important}
 .h5-db-tabs button{border:1px solid transparent!important;border-radius:20px!important;background:transparent!important;color:var(--muted)!important;font-size:12px!important;padding:7px 10px!important;white-space:nowrap}
 .h5-db-tabs button.active{background:#93d8bf13!important;border-color:#93d8bf26!important;color:var(--mint)!important}

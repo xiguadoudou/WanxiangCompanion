@@ -13,6 +13,7 @@ const header=document.createElement('header');header.className='wxq-app-header';
 header.innerHTML=`<div class="wxq-brand"><button class="wxq-app-mark" data-action="navigation" aria-label="打开功能侧边栏"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div><strong>万象弈伴</strong><small id="wxq-module-status">${database?'万象资料库':'阵容模拟'} · 本地可用</small></div></div><div class="wxq-header-tools">${database?'':'<button class="wxq-tool wxq-plan-trigger" aria-label="阵容方案" aria-expanded="false">方案</button>'}<button class="wxq-tool" data-action="refresh" aria-label="同步资料并刷新"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 4v6h-6M20 10a8 8 0 1 0 0 5"/></svg></button><button class="wxq-tool" data-action="home" aria-label="返回阵容推荐"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button></div>`;
 const app=document.getElementById('app');app.before(header);document.body.dataset.module=database?'database':'simulator';
 function appAction(action){window.prompt('__WXQ_APP_ACTION__',action);}
+window.WxqNavigationGesture?.install({open:()=>appAction('navigation')});
 header.addEventListener('click',e=>{const b=e.target.closest('button[data-action]');if(b)appAction(b.dataset.action);});
 if(!database){
  const trigger=header.querySelector('.wxq-plan-trigger'),menu=document.createElement('div');menu.className='wxq-plan-menu';menu.hidden=true;menu.setAttribute('role','menu');
@@ -34,7 +35,9 @@ async function exportImage(horizontal=false,transparent=false){
  if(exporting)return;exporting=true;let stage;
  try{
   const raw=new URL(location.href).searchParams.get('lineup');if(!raw)throw Error('请先添加英雄、棋手或天赋牌');
-  const manifest=await(await fetch('/port-manifest.json')).json();
+  const response=await fetch('/port-manifest.json');if(!response.ok)throw Error('导出组件未能准备，请重新打开模拟器后重试');
+  let manifest;try{manifest=await response.json();}catch(e){throw Error('本地导出配置读取失败，请重新打开模拟器后重试');}
+  if(!/^[A-Za-z0-9_.-]+\.js$/.test(manifest.desktop||''))throw Error('本地导出组件配置无效');
   // Reuse the packaged capture library and the actual board DOM, including
   // special units, equipment, backups, players and talents. Never re-layout data.
   const {h:capture}=await import('/assets/'+manifest.desktop);

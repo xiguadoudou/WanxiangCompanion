@@ -73,6 +73,7 @@ cache_special_images(work)
 for name in ['index.html','port.css','port.js']:
     shutil.copyfile(ROOT/'assets'/'workshop'/name,work/name)
 (work/'index.html').write_text((work/'index.html').read_text().replace('__ENTRY__',entry))
+shutil.copyfile(ROOT/'assets/navigation-gesture.js',work/'navigation-gesture.js')
 path=ROOT/'assets/workshop/site.zip';pending=ROOT/'build/workshop-pending.zip'
 with zipfile.ZipFile(pending,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
     for p in sorted(work.rglob('*')):

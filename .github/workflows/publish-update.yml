@@ -55,6 +55,8 @@ jobs:
           java -cp "$RUNNER_TEMP/wxq-native" com.doudou.wxq.SiteModulesTest
       - name: Check packaged local workshop and plan import
         run: |
+          java -m jdk.compiler/com.sun.tools.javac.Main --release 8 -encoding UTF-8 -d "$RUNNER_TEMP/wxq-native" android/src/com/doudou/wxq/WorkshopRoutes.java android/tests/WorkshopRoutesTest.java
+          java -cp "$RUNNER_TEMP/wxq-native" com.doudou.wxq.WorkshopRoutesTest android/assets/workshop/site.zip
           python3 - <<'PY_DATA'
           from pathlib import Path
           import os, zipfile

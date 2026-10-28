@@ -7,6 +7,12 @@
 - `res/`、`AndroidManifest.xml`：安卓资源、组件和权限。
 - `tests/`：保留的原生与界面回归检查，`fixtures/` 为历史公开数据响应测试资料，产品不使用这些测试响应代替在线推荐。
 
+## 0.1.20 实际资源路由与页面左滑
+
+`WorkshopRoutes` 是 Android 本地资源服务与离线浏览器检查共同采用的路径规则，包含导出需要的 `/port-manifest.json`，修正原先浏览器任意文件服务掩盖 Android 404 的问题。`WorkshopRoutesTest` 检查配置、捕获模块、路径隔离；`workshop-local.test.cjs` 调用同一 Java 规则生成可访问路径列表后启动本地模拟。
+
+`navigation-gesture.js` 在首页和模块间共享，只有从普通内容开始的触摸才注册可取消的移动监听。向左超过 56 CSS px 且方向明显为水平时，在松手后打开导航；棋盘、拖动源、水平滚动容器、输入框、滑块等保持自身事件。下一次触摸立即解除兼容点击抑制，纵向和多点触摸取消导航判定。MainActivity 仅保留已打开抽屉的原生关闭拖动，移除边缘右滑打开的旧限制。资料库工具区 position 改为 static。
+
 ## 0.1.19 页面融合、导出与动画
 
 模块自己的 HTML 顶栏和正文共用同一 body 背景；`WorkshopView` 不再叠加独立原生工具栏。顶栏固定动作使用 `__WXQ_APP_ACTION__` 提示回调，Android 校验当前 WebView、模块 URL 与动作白名单后处理导航、本机方案和刷新；PNG 仍走单独限定的保存回调。不注入通用原生桥。

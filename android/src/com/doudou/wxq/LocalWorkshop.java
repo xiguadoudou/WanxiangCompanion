@@ -16,10 +16,7 @@ final class LocalWorkshop {
  private static WebResourceResponse response(String mime,byte[] data){Map<String,String> h=new HashMap<>();h.put("Cache-Control","no-store");h.put("Access-Control-Allow-Origin","*");return new WebResourceResponse(mime,mime.startsWith("image/")?null:"UTF-8",200,"OK",h,new ByteArrayInputStream(data));}
  WebResourceResponse resource(String path)throws Exception{
   if(path.equals("/workshop-data.js"))return response("application/javascript",("window.__WXQ_DATA__="+data().toString()+";").getBytes(StandardCharsets.UTF_8));
-  if(path.equals("/team-builder")||path.equals("/simulator")||path.equals("/h5/database"))return response("text/html",file("index.html"));
-  if(path.equals("/port.js")||path.equals("/port.css"))return response(path.endsWith(".js")?"application/javascript":"text/css",file(path.substring(1)));
-  if(path.matches("/assets/[A-Za-z0-9_.-]+\\.(js|css)"))return response(path.endsWith(".js")?"application/javascript":"text/css",file(path.substring(1)));
-  if(path.matches("/assets/level/[1-5]\\.png"))return response("image/png",file(path.substring(1)));
+  String name=WorkshopRoutes.file(path);if(name!=null)return response(WorkshopRoutes.mime(name),file(name));
   return blocked();
  }
  WebResourceResponse image(String url)throws Exception{String name=images.optString(url);return name.isEmpty()?null:response(name.endsWith(".jpg")?"image/jpeg":"image/png",file(name));}

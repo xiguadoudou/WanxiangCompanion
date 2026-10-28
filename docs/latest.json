@@ -1,12 +1,12 @@
 {
   "packageName": "com.doudou.wxq",
-  "versionCode": 20,
-  "versionName": "0.1.19",
-  "apkUrl": "https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.19/WanxiangCompanion-0.1.19.apk",
+  "versionCode": 21,
+  "versionName": "0.1.20",
+  "apkUrl": "https://github.com/xiguadoudou/WanxiangCompanion/releases/download/v0.1.20/WanxiangCompanion-0.1.20.apk",
   "apkFallbackUrls": [
-    "https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.19.apk"
+    "https://raw.githubusercontent.com/xiguadoudou/WanxiangCompanion/main/updates/WanxiangCompanion-0.1.20.apk"
   ],
-  "sha256": "6d014de0b329dadfe386bd037182a9748abbfecf4367c220750e39a6bae061db",
-  "sizeBytes": 9463768,
-  "notes": "1. 模拟器、资料库的顶部并入本地页面，与正文共享连续背景，修复顶部衔接生硬的问题，方案菜单也统一为软件风格。\n2. 阵容图改为捕获实际棋盘，按浅色参考图导出完整站位、头像、装备及棋手/天赋牌区域；补齐特殊单位图片，修复机械仆从等头像遗漏。\n3. 首页移除中间的更新跳转箭头，将设置按钮改为齿轮；软件更新仍可在设置内操作。\n4. 侧边栏增加左侧滑出与跟手拖动：左边缘右滑展开、向左滑收起；主功能、设置、详情和弹层增加短过渡动效。\n5. 沿用原签名覆盖升级，安装包和源码同步发布。"
+  "sha256": "77e3bb6209ec5f14efc91c70a50f56450eb28e76b90bdaf8f65978b765a4165e",
+  "sizeBytes": 9467938,
+  "notes": "1. 资料库的搜索和筛选区取消吸顶，随页面正常向上滚出，不再跟随遮挡内容。\n2. 修复保存阵容图时的 Unexpected end of JSON input 报错，补齐 Android 本地资源规则遗漏的导出配置；导出回归使用同一套实际资源规则。\n3. 按要求改为任意普通内容区域向左滑打开侧边栏，不再限于边缘右滑；棋盘拖动、横向列表、标签、输入框和滑块保持原操作，纵向滚动不触发。\n4. 已检查普通内容左滑、滑块和横向列表排除、棋盘长距离左右拖动、搜索区滚出及完整图片导出。原签名覆盖升级，源码同步发布。"
 }

@@ -67,13 +67,13 @@ public final class MainActivity extends Activity {
  @Override protected void onNewIntent(Intent i){super.onNewIntent(i);setIntent(i);if(i.getBooleanExtra("startOverlay",false)){i.removeExtra("startOverlay");requestOverlay();}}
  @Override public void onConfigurationChanged(android.content.res.Configuration c){super.onConfigurationChanged(c);if(navigation!=null){closeNavigationNow();root.post(this::openNavigation);}}
  @Override protected void onDestroy(){destroyed=true;cancelOverlayStart();handler.removeCallbacksAndMessages(null);closeNavigationNow();for(android.view.View page:pages.values())if(page instanceof WorkshopView)((WorkshopView)page).dispose();pages.clear();if(view!=null){view.dispose();view=null;}super.onDestroy();}
- /** Edge gestures are intercepted only after horizontal intent; board/vertical gestures elsewhere stay with the page. */
+ /** Closing an open native drawer remains draggable; page opening gestures are classified in the local document. */
  @Override public boolean dispatchTouchEvent(android.view.MotionEvent e){
-  int action=e.getActionMasked();if(action==android.view.MotionEvent.ACTION_DOWN){edgeX=e.getX();edgeY=e.getY();drawerStartedOpen=navigation!=null&&!navigationClosing;edgeCandidate=drawerStartedOpen||edgeX<=root.getPaddingLeft()+dp(24);drawerDragging=false;}
+  int action=e.getActionMasked();if(action==android.view.MotionEvent.ACTION_DOWN){edgeX=e.getX();edgeY=e.getY();drawerStartedOpen=navigation!=null&&!navigationClosing;edgeCandidate=drawerStartedOpen;drawerDragging=false;}
   if(e.getPointerCount()>1)edgeCandidate=false;
   if(action==android.view.MotionEvent.ACTION_MOVE&&edgeCandidate){float dx=e.getX()-edgeX,dy=e.getY()-edgeY;
-   if(!drawerDragging){if(Math.abs(dy)>dp(12)&&Math.abs(dy)>Math.abs(dx)){edgeCandidate=false;}else if(Math.abs(dx)>dp(12)&&Math.abs(dx)>Math.abs(dy)*1.4f&&(drawerStartedOpen?dx<0:dx>0)){
-    drawerDragging=true;if(!drawerStartedOpen)openNavigation(false);stopDrawerAnimation();android.view.MotionEvent cancel=android.view.MotionEvent.obtain(e);cancel.setAction(android.view.MotionEvent.ACTION_CANCEL);super.dispatchTouchEvent(cancel);cancel.recycle();
+   if(!drawerDragging){if(Math.abs(dy)>dp(12)&&Math.abs(dy)>Math.abs(dx)){edgeCandidate=false;}else if(Math.abs(dx)>dp(12)&&Math.abs(dx)>Math.abs(dy)*1.4f&&dx<0){
+    drawerDragging=true;stopDrawerAnimation();android.view.MotionEvent cancel=android.view.MotionEvent.obtain(e);cancel.setAction(android.view.MotionEvent.ACTION_CANCEL);super.dispatchTouchEvent(cancel);cancel.recycle();
    }}
    if(drawerDragging&&navigationPanel!=null){float width=navigationPanel.getLayoutParams().width;drawerProgress((drawerStartedOpen?1:0)+dx/width);return true;}
   }
